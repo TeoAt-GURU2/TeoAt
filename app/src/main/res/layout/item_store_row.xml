@@ -29,14 +29,6 @@
 
         <View android:layout_width="1dp" android:layout_height="match_parent" android:background="#E0E0E0" />
 
-        <TextView
-            android:id="@+id/tv_category"
-            android:layout_width="70dp"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="분류" />
-
-        <View android:layout_width="1dp" android:layout_height="match_parent" android:background="#E0E0E0" />
 
         <TextView
             android:id="@+id/tv_address"

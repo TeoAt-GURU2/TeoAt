@@ -78,13 +78,17 @@
         app:layout_constraintBottom_toTopOf="@id/rv_store_list">
 
         <View android:layout_width="1dp" android:layout_height="match_parent" android:background="#000000" />
+
         <TextView android:layout_width="50dp" android:layout_height="match_parent" android:gravity="center" android:text="★" android:textColor="#000000" />
+
         <View android:layout_width="1dp" android:layout_height="match_parent" android:background="#000000" />
+
         <TextView android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="center" android:text="가맹점" android:textStyle="bold" android:textColor="#000000" />
+
         <View android:layout_width="1dp" android:layout_height="match_parent" android:background="#000000" />
-        <TextView android:layout_width="60dp" android:layout_height="match_parent" android:gravity="center" android:text="분류" android:textStyle="bold" android:textColor="#000000" />
-        <View android:layout_width="1dp" android:layout_height="match_parent" android:background="#000000" />
+
         <TextView android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1.5" android:gravity="center" android:text="주소" android:textStyle="bold" android:textColor="#000000" />
+
         <View android:layout_width="1dp" android:layout_height="match_parent" android:background="#000000" />
     </LinearLayout>
 

@@ -17,6 +17,13 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import com.example.teoat.BuildConfig
+import android.Manifest
+import android.content.pm.PackageManager
+import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 
 
 class StoreActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -25,16 +32,21 @@ class StoreActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var adapter: StoreAdapter
     private var allStores = mutableListOf<Store>()
     private var isFavoriteMode = false
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private val markerMap = HashMap<String, com.google.android.gms.maps.model.Marker>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_store)
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         // 1. 뷰 연결 (XML의 ID와 일치해야 오류가 사라집니다)
         val rvStoreList = findViewById<RecyclerView>(R.id.rv_store_list)
         val etSearch = findViewById<EditText>(R.id.et_search)
         val ivTopFavorite = findViewById<ImageView>(R.id.iv_top_favorite)
         val ivMyLocation = findViewById<ImageView>(R.id.iv_my_location)
+
+
 
         // 2. 지도 설정
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
@@ -50,7 +62,13 @@ class StoreActivity : AppCompatActivity(), OnMapReadyCallback {
             },
             onItemClick = { store ->
                 val location = LatLng(store.latitude, store.longitude)
+                // 1. 지도를 해당 위치로 이동
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 16f))
+
+                // 2. 해당 위치의 마커를 찾아서 정보창(이름) 띄우기
+                // 기존에 추가된 마커들 중에서 좌표가 일치하는 마커를 찾아 정보를 표시합니다.
+                val marker = markerMap[store.id] // 마커를 관리하는 Map이 필요합니다 (아래 추가 설명 참고)
+                marker?.showInfoWindow()
             }
         )
         rvStoreList.layoutManager = LinearLayoutManager(this)
@@ -112,6 +130,7 @@ class StoreActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun applyFilters(query: String) {
         val filtered = allStores.filter { store ->
+            // 이름에 검색어가 포함되는지만 확인
             val matchesQuery = store.name.contains(query, ignoreCase = true)
             val matchesFavorite = if (isFavoriteMode) store.isFavorite else true
             matchesQuery && matchesFavorite
@@ -123,9 +142,21 @@ class StoreActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun addMarkersToMap(stores: List<Store>) {
         if (!::mMap.isInitialized) return
         mMap.clear()
+        markerMap.clear() // 기존 매핑 데이터 초기화
+
         for (store in stores) {
             val position = LatLng(store.latitude, store.longitude)
-            mMap.addMarker(MarkerOptions().position(position).title(store.name))
+            val markerOptions = MarkerOptions()
+                .position(position)
+                .title(store.name)
+                .snippet(store.address) // 주소도 함께 나오게 하고 싶다면 추가
+
+            val marker = mMap.addMarker(markerOptions)
+
+            // 마커 객체를 ID를 키값으로 저장
+            if (marker != null) {
+                markerMap[store.id] = marker
+            }
         }
     }
 
@@ -149,7 +180,6 @@ class StoreActivity : AppCompatActivity(), OnMapReadyCallback {
                         allStores.add(Store(
                             id = item.FACLT_NM ?: "",
                             name = item.FACLT_NM ?: "이름 없음",
-                            category = item.DIV_NM ?: "분류 없음",
                             address = item.REFINE_ROADNM_ADDR ?: "주소 없음",
                             latitude = item.REFINE_WGS84_LAT?.toDoubleOrNull() ?: 37.0,
                             longitude = item.REFINE_WGS84_LOGT?.toDoubleOrNull() ?: 127.0
@@ -170,7 +200,26 @@ class StoreActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun moveToCurrentLocation() {
-        val myPos = LatLng(37.4979, 127.0276)
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myPos, 15f))
+        // 1. 위치 권한이 있는지 확인
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // 권한이 없다면 요청 (이미 요청 코드가 있다면 생략 가능)
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1000)
+            return
+        }
+
+        // 2. 현재 위치 가져오기
+        fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+            if (location != null) {
+                val currentLatLng = LatLng(location.latitude, location.longitude)
+
+                // 3. 지도를 현재 위치로 이동 (줌 레벨 15f)
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15f))
+
+                // 필요하다면 현재 위치에 마커 추가
+                mMap.addMarker(MarkerOptions().position(currentLatLng).title("내 위치"))
+            } else {
+                Toast.makeText(this, "현재 위치를 불러올 수 없습니다.", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 }

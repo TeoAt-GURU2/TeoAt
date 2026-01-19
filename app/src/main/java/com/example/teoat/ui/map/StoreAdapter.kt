@@ -16,7 +16,6 @@ class StoreAdapter(
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val name: TextView = view.findViewById(R.id.tv_name)
-        val category: TextView = view.findViewById(R.id.tv_category)
         val address: TextView = view.findViewById(R.id.tv_address)
         val star: ImageView = view.findViewById(R.id.iv_star)
 
@@ -34,7 +33,6 @@ class StoreAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val store = stores[position]
         holder.name.text = store.name
-        holder.category.text = store.category
         holder.address.text = store.address
         holder.star.setImageResource(
             if (store.isFavorite) android.R.drawable.btn_star_big_on
