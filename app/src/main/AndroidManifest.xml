@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TeoAt">
         <activity
-            android:name=".ui.join.JoinActivity"
+            android:name=".ui.auth.JoinActivity"
             android:exported="false" />
         <activity
             android:name=".ui.chatbot.ChatbotActivity"

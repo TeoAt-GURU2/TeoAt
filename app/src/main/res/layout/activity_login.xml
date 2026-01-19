@@ -17,24 +17,15 @@
         android:layout_marginTop="32dp"/>
 
     <EditText
-        android:id="@+id/etName"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="이름"
-        app:layout_constraintTop_toBottomOf="@id/ivProfile"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="28dp"/>
-
-    <EditText
         android:id="@+id/etId"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="아이디"
-        app:layout_constraintTop_toBottomOf="@id/etName"
+        android:inputType="text"
+        app:layout_constraintTop_toBottomOf="@id/ivProfile"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="32dp"/>
 
     <EditText
         android:id="@+id/etPw"
@@ -47,35 +38,26 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp"/>
 
-    <EditText
-        android:id="@+id/etRegion"
+    <Button
+        android:id="@+id/btnLogin"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="거주지역"
+        android:layout_height="56dp"
+        android:text="로그인"
         app:layout_constraintTop_toBottomOf="@id/etPw"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"/>
-
-    <EditText
-        android:id="@+id/etAge"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="나이"
-        android:inputType="number"
-        app:layout_constraintTop_toBottomOf="@id/etRegion"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"/>
+        app:layout_constraintEnd_toStartOf="@id/btnGoJoin"
+        app:layout_constraintWidth_percent="0.48"
+        android:layout_marginTop="24dp"/>
 
     <Button
-        android:id="@+id/btnJoin"
-        android:layout_width="200dp"
+        android:id="@+id/btnGoJoin"
+        android:layout_width="0dp"
         android:layout_height="56dp"
         android:text="회원가입"
-        app:layout_constraintTop_toBottomOf="@id/etAge"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/etPw"
+        app:layout_constraintStart_toEndOf="@id/btnLogin"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="28dp"/>
+        app:layout_constraintWidth_percent="0.48"
+        android:layout_marginTop="24dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
