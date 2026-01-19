@@ -2,12 +2,20 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("com.google.gms.google-services")
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 android {
     namespace = "com.example.teoat"
     compileSdk {
         version = release(36)
+    }
+
+    secrets {
+        // 기본값인 secrets.properties 파일을 사용하도록 설정
+        propertiesFileName = "secrets.properties"
+
+        ignoreList.add("sdk.*")
     }
 
     defaultConfig {
@@ -39,6 +47,7 @@ android {
 
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 
@@ -67,4 +76,12 @@ dependencies {
     // ViewModel 및 Coroutine
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.10.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.10.0")
+
+    //구글 지도
+    implementation("com.google.android.gms:play-services-maps:18.2.0")
+    implementation("com.google.android.material:material:1.9.0")
+
+    //급식카드가맹점 API
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 }
