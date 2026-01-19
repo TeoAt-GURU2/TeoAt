@@ -10,6 +10,6 @@ interface ApiService {
         @Query("KEY") key: String,
         @Query("Type") type: String = "json",
         @Query("pIndex") index: Int = 1,
-        @Query("pSize") size: Int = 100 // 한 번에 가져올 데이터 수
+        @Query("pSize") size: Int = 300 // 한 번에 가져올 데이터 수
     ): Call<StoreResponse>
 }

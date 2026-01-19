@@ -16,6 +16,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TeoAt">
 
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${MAPS_API_KEY}" />
+
         <activity android:name=".ui.auth.JoinActivity"
             android:exported="false" />
         <activity android:name=".ui.auth.LoginActivity"
@@ -29,8 +33,12 @@
             android:exported="false" />
 
         <activity
-            android:name=".base.BaseActivity"
+            android:name=".ui.map.StoreActivity"
             android:exported="false" />
+
+        <activity
+            android:name=".base.BaseActivity"
+            android:exported="true" />
         <activity
             android:name=".ui.chatbot.ChatbotActivity"
             android:exported="false" />

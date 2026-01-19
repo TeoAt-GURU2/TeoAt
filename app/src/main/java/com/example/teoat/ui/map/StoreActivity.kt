@@ -22,15 +22,21 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import com.example.teoat.base.BaseActivity
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 
 
-class StoreActivity : AppCompatActivity(), OnMapReadyCallback {
+class StoreActivity : BaseActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
     private lateinit var adapter: StoreAdapter
+
+    //전체 데이터 원본 (API에서 받아 온 모든 데이터)
     private var allStores = mutableListOf<Store>()
+
+    //현재 지도 화면에 보이는 데이터 (지도 이동 시에 갱신됨)
+    private var currentVisibleStores = mutableListOf<Store>()
     private var isFavoriteMode = false
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val markerMap = HashMap<String, com.google.android.gms.maps.model.Marker>()
@@ -40,13 +46,11 @@ class StoreActivity : AppCompatActivity(), OnMapReadyCallback {
         setContentView(R.layout.activity_store)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-        // 1. 뷰 연결 (XML의 ID와 일치해야 오류가 사라집니다)
+        // 1. 뷰 연결
         val rvStoreList = findViewById<RecyclerView>(R.id.rv_store_list)
         val etSearch = findViewById<EditText>(R.id.et_search)
         val ivTopFavorite = findViewById<ImageView>(R.id.iv_top_favorite)
         val ivMyLocation = findViewById<ImageView>(R.id.iv_my_location)
-
-
 
         // 2. 지도 설정
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
@@ -67,15 +71,15 @@ class StoreActivity : AppCompatActivity(), OnMapReadyCallback {
 
                 // 2. 해당 위치의 마커를 찾아서 정보창(이름) 띄우기
                 // 기존에 추가된 마커들 중에서 좌표가 일치하는 마커를 찾아 정보를 표시합니다.
-                val marker = markerMap[store.id] // 마커를 관리하는 Map이 필요합니다 (아래 추가 설명 참고)
+                val marker = markerMap[store.id] // 마커를 관리하는 Map이 필요합니다.
                 marker?.showInfoWindow()
             }
         )
         rvStoreList.layoutManager = LinearLayoutManager(this)
         rvStoreList.adapter = adapter
 
-        // 4. 검색창 텍스트 감시 (오류 수정됨)
-        // [방법 A] 돋보기 아이콘 터치 시 검색 실행
+        // 4. 검색창 텍스트 감시
+        // 돋보기 아이콘 터치 시 검색 실행
         etSearch.setOnTouchListener { v, event ->
             if (event.action == android.view.MotionEvent.ACTION_UP) {
                 // 오른쪽 아이콘(돋보기) 영역 터치 감지
@@ -89,7 +93,7 @@ class StoreActivity : AppCompatActivity(), OnMapReadyCallback {
             false
         }
 
-        // [방법 B] 키보드에서 '검색(돋보기)' 버튼을 눌렀을 때 실행
+        // 키보드에서 '검색(돋보기)' 버튼을 눌렀을 때 실행
         etSearch.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == android.view.inputmethod.EditorInfo.IME_ACTION_SEARCH) {
                 applyFilters(etSearch.text.toString())
@@ -102,7 +106,7 @@ class StoreActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
 
-        // (참고) 만약 실시간 검색도 계속 유지하고 싶다면 아래 코드를 남겨두세요.
+        // 실시간 검색 결과 보이기
         // 아이콘 클릭 시에만 검색되게 하려면 아래 블록을 삭제하시면 됩니다.
         etSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -112,12 +116,13 @@ class StoreActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         })
 
-        // 5. 버튼 클릭 리스너
+        // 5. 버튼 클릭 리스너 - 즐겨찾기 버튼
         ivTopFavorite.setOnClickListener {
             isFavoriteMode = !isFavoriteMode
             applyFilters(etSearch.text.toString())
         }
 
+        // 5. 버튼 클릭 리스너 - 내 위치 버튼
         ivMyLocation.setOnClickListener {
             moveToCurrentLocation()
         }

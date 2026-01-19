@@ -14,6 +14,7 @@ import com.example.teoat.R
 import com.example.teoat.databinding.ActivityBaseBinding
 import com.example.teoat.ui.chatbot.ChatbotActivity
 import com.example.teoat.ui.main.MainActivity
+import com.example.teoat.ui.map.StoreActivity
 import com.example.teoat.ui.mypage.MyPageActivity
 import com.google.firebase.ai.type.content
 
@@ -89,7 +90,7 @@ open class BaseActivity : AppCompatActivity() {
                 }
 
                 R.id.nav_store -> {
-                    startActivity(Intent(this, MainActivity::class.java))
+                    startActivity(Intent(this, StoreActivity::class.java))
                 }
 
                 R.id.nav_facility -> {

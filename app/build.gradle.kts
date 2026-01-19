@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("com.google.gms.google-services")
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 android {
@@ -39,6 +40,7 @@ android {
 
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 
@@ -73,4 +75,13 @@ dependencies {
     implementation("com.google.android.material:material:1.13.0")
     // 이미지 로딩을 위한 라이브러리
     implementation("com.github.bumptech.glide:glide:4.9.0")
+
+    //구글 지도
+    implementation("com.google.android.gms:play-services-maps:18.2.0")
+    implementation("com.google.android.material:material:1.9.0")
+    implementation("com.google.android.gms:play-services-location:21.0.1")
+
+    //급식카드가맹점 API
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 }
