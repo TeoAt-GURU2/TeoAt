@@ -16,9 +16,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TeoAt">
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="${MAPS_API_KEY}" />
+
+        <activity
+            android:name=".ui.mypage.MyPageActivity"
+            android:exported="false" />
+
         <activity
             android:name=".ui.auth.JoinActivity"
             android:exported="false" />
@@ -28,6 +34,9 @@
         <activity
             android:name=".ui.map.StoreActivity"
             android:exported="true">
+
+
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

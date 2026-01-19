@@ -5,49 +5,179 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/teoat_background"
     tools:context=".ui.main.MainActivity">
 
-    <TextView
-        android:id="@+id/tv_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/layout_main_input"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+    <!-- 상단 바 -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/topBar"
+        android:layout_width="0dp"
+        android:layout_height="72dp"
+        android:background="@color/teoat_primary"
+        android:paddingStart="@dimen/teoat_spacing_md"
+        android:paddingEnd="@dimen/teoat_spacing_md"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed"/>
-
-    <LinearLayout
-        android:id="@+id/layout_main_input"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="70dp"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_title">
-        
-        <EditText
-            android:id="@+id/et_initial_query"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="예: 급식카드 가맹점을 찾아줘"
-            android:inputType="text"
-            android:maxLines="1"
-            android:background="@android:drawable/edit_text"/>
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <Button
-            android:id="@+id/btn_start_chat"
+        <TextView
+            android:id="@+id/tvMainTitle"
+            style="@style/TextAppearance.TeoAt.Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="검색"
-            android:layout_marginStart="8dp"    />
+            android:text="TeoAt_메인 페이지"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
-    </LinearLayout>
+        <!-- 계정 영역 -->
+        <LinearLayout
+            android:id="@+id/btnAccount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <ImageView
+                android:id="@+id/ivAccount"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@mipmap/ic_launcher"
+                android:contentDescription="@null" />
+
+            <TextView
+                android:id="@+id/tvAccount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="계정"
+                android:textSize="14sp"
+                android:layout_marginStart="6dp"
+                android:textColor="@color/teoat_on_primary" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- 메인 컨텐츠 -->
+    <ScrollView
+        android:id="@+id/scroll"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/topBar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/teoat_padding_screen">
+
+            <!-- 이벤트 배너 -->
+            <View
+                android:id="@+id/boxBanner"
+                android:layout_width="0dp"
+                android:layout_height="220dp"
+                android:background="@color/teoat_primary"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <TextView
+                android:id="@+id/tvBannerText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="이벤트 홍보 배너"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/teoat_on_primary"
+                app:layout_constraintTop_toTopOf="@id/boxBanner"
+                app:layout_constraintBottom_toBottomOf="@id/boxBanner"
+                app:layout_constraintStart_toStartOf="@id/boxBanner"
+                app:layout_constraintEnd_toEndOf="@id/boxBanner" />
+
+            <!-- 챗봇 버튼 -->
+            <Button
+                android:id="@+id/btnChatbot"
+                style="@style/Widget.TeoAt.PrimaryButton.Large"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="(챗봇) 내게 맞는 서비스 찾기"
+                app:layout_constraintTop_toBottomOf="@id/boxBanner"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="@dimen/teoat_spacing_lg" />
+
+            <!-- 3개 버튼 row -->
+            <Button
+                android:id="@+id/btnPolicy"
+                style="@style/Widget.TeoAt.PrimaryButton.Large"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="아동·청소년\n정책 찾기"
+                app:layout_constraintTop_toBottomOf="@id/btnChatbot"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btnFacility"
+                app:layout_constraintWidth_percent="0.32"
+                android:layout_marginTop="@dimen/teoat_spacing_md" />
+
+            <Button
+                android:id="@+id/btnFacility"
+                style="@style/Widget.TeoAt.PrimaryButton.Large"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="복지 시설 찾기"
+                app:layout_constraintTop_toBottomOf="@id/btnChatbot"
+                app:layout_constraintStart_toEndOf="@id/btnPolicy"
+                app:layout_constraintEnd_toStartOf="@id/btnCalendar"
+                app:layout_constraintWidth_percent="0.32"
+                android:layout_marginStart="@dimen/teoat_spacing_sm"
+                android:layout_marginEnd="@dimen/teoat_spacing_sm"
+                android:layout_marginTop="@dimen/teoat_spacing_md" />
+
+            <Button
+                android:id="@+id/btnCalendar"
+                style="@style/Widget.TeoAt.PrimaryButton.Large"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="캘린더 보기"
+                app:layout_constraintTop_toBottomOf="@id/btnChatbot"
+                app:layout_constraintStart_toEndOf="@id/btnFacility"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintWidth_percent="0.32"
+                android:layout_marginTop="@dimen/teoat_spacing_md" />
+
+            <!-- 하단 2개 버튼 -->
+            <Button
+                android:id="@+id/btnStore"
+                style="@style/Widget.TeoAt.PrimaryButton.Large"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="급식카드\n가맹점 찾기"
+                app:layout_constraintTop_toBottomOf="@id/btnPolicy"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btnCardManage"
+                app:layout_constraintWidth_percent="0.48"
+                android:layout_marginTop="@dimen/teoat_spacing_lg" />
+
+            <Button
+                android:id="@+id/btnCardManage"
+                style="@style/Widget.TeoAt.PrimaryButton.Large"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="급식카드\n관리하기"
+                app:layout_constraintTop_toBottomOf="@id/btnPolicy"
+                app:layout_constraintStart_toEndOf="@id/btnStore"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintWidth_percent="0.48"
+                android:layout_marginStart="@dimen/teoat_spacing_md"
+                android:layout_marginTop="@dimen/teoat_spacing_lg" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
