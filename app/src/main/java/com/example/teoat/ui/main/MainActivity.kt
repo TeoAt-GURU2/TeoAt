@@ -38,7 +38,6 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "가맹점 찾기(추후 연결)", Toast.LENGTH_SHORT).show()
         }
 
-        // ✅ 급식카드 관리하기 -> 경기도 꿈나무카드 사이트로 이동
         findViewById<Button>(R.id.btnCardManage).setOnClickListener {
             val url = "https://www.gg.go.kr/gdream/view/fma/ordmain/main"
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
