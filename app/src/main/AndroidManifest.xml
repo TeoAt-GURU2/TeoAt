@@ -15,6 +15,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TeoAt">
+
+        <activity
+            android:name=".base.BaseActivity"
+            android:exported="false" />
         <activity
             android:name=".ui.join.JoinActivity"
             android:exported="false" />

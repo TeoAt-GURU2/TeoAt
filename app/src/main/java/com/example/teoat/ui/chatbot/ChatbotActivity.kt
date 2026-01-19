@@ -13,11 +13,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.teoat.R
+import com.example.teoat.base.BaseActivity
 import com.example.teoat.databinding.ActivityChatbotBinding
 import com.example.teoat.ui.main.MainActivity
 import kotlinx.coroutines.launch
 
-class ChatbotActivity : AppCompatActivity() {
+class ChatbotActivity : BaseActivity() {
     // ViewBinding 객체 선언
     private lateinit var binding : ActivityChatbotBinding
 
