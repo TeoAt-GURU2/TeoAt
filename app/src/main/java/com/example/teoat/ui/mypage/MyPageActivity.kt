@@ -31,11 +31,6 @@ class MyPageActivity : AppCompatActivity() {
         if (session.isLoggedIn()) showLoggedInUi() else showLoggedOutUi()
     }
 
-    /**
-     * FirebaseAuth 상태랑 SessionManager 상태가 어긋날 수 있어서 한번 맞춰줌
-     * - Firebase에 유저가 있으면 SessionManager에도 uid 저장
-     * - Firebase에 유저가 없으면 SessionManager도 로그아웃 처리
-     */
     private fun syncSessionWithFirebase() {
         val firebaseUser = auth.currentUser
         if (firebaseUser != null) {
@@ -49,15 +44,14 @@ class MyPageActivity : AppCompatActivity() {
         val binding = ActivityMypageLoggedOutBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // "로그인" 버튼 -> LoginActivity로 이동
         binding.btnLogin.setOnClickListener {
             startActivity(Intent(this, LoginActivity::class.java))
         }
 
-        // "회원가입" 버튼 -> JoinActivity로 이동
         binding.btnGoJoin.setOnClickListener {
             startActivity(Intent(this, JoinActivity::class.java))
         }
+
     }
 
     private fun showLoggedInUi() {
@@ -66,34 +60,29 @@ class MyPageActivity : AppCompatActivity() {
 
         val uid = session.getUserId()
         if (uid.isNullOrEmpty()) {
-            // 세션이 비정상인 경우
             session.logout()
             showLoggedOutUi()
             return
         }
 
-        // 기본은 uid 보여주고, Firestore에 email 있으면 가져와서 표시
-        binding.tvHello.text = "${uid} 님"
+        // 기본 placeholder
+        binding.tvHello.text = "안녕하세요"
+        binding.tvName.text = "이름: -"
+        binding.tvEmail.text = "이메일: -"
+        binding.tvRegion.text = "거주지역: -"
+        binding.tvAge.text = "나이: -"
 
-        db.collection("users").document(uid).get()
-            .addOnSuccessListener { doc ->
-                val email = doc.getString("email")
-                if (!email.isNullOrEmpty()) {
-                    binding.tvHello.text = "${email} 님"
-                }
-            }
-            .addOnFailureListener {
-                // 실패해도 앱이 죽을 필요 없으니 조용히 넘어감
-            }
-
-        binding.btnEdit.setOnClickListener {
-            Toast.makeText(this, "내정보 수정(추후 구현)", Toast.LENGTH_SHORT).show()
-        }
+        // 자동으로 한번 로드
+        loadUserProfile(binding, uid, showToastOnSuccess = false)
 
         binding.btnInfo.setOnClickListener {
-            Toast.makeText(this, "내정보 조회(추후 구현)", Toast.LENGTH_SHORT).show()
+            // "내정보 조회"를 실제로 Firestore에서 다시 가져오게
+            loadUserProfile(binding, uid, showToastOnSuccess = true)
         }
 
+        binding.btnEdit.setOnClickListener {
+            startActivity(Intent(this, EditProfileActivity::class.java))
+        }
         binding.btnLogout.setOnClickListener {
             auth.signOut()
             session.logout()
@@ -101,5 +90,53 @@ class MyPageActivity : AppCompatActivity() {
             showLoggedOutUi()
         }
     }
-}
 
+    private fun loadUserProfile(
+        binding: ActivityMypageLoggedInBinding,
+        uid: String,
+        showToastOnSuccess: Boolean
+    ) {
+        db.collection("users").document(uid).get()
+            .addOnSuccessListener { doc ->
+                if (!doc.exists()) {
+                    if (showToastOnSuccess) {
+                        Toast.makeText(this, "유저 정보가 없습니다.", Toast.LENGTH_SHORT).show()
+                    }
+                    return@addOnSuccessListener
+                }
+
+                val name = doc.getString("name").orEmpty()
+                val email = doc.getString("email").orEmpty()
+                val region = doc.getString("region").orEmpty()
+
+                // age는 Int로 넣었으니 Long으로 읽히는 경우가 많아서 이렇게 처리
+                val ageAny = doc.get("age")
+                val age = when (ageAny) {
+                    is Long -> ageAny.toInt()
+                    is Int -> ageAny
+                    else -> null
+                }
+
+                // 인사말은 name 우선, 없으면 email
+                binding.tvHello.text = when {
+                    name.isNotBlank() -> "${name} 님"
+                    email.isNotBlank() -> "${email} 님"
+                    else -> "안녕하세요"
+                }
+
+                binding.tvName.text = "이름: ${if (name.isBlank()) "-" else name}"
+                binding.tvEmail.text = "이메일: ${if (email.isBlank()) "-" else email}"
+                binding.tvRegion.text = "거주지역: ${if (region.isBlank()) "-" else region}"
+                binding.tvAge.text = "나이: ${age ?: "-"}"
+
+                if (showToastOnSuccess) {
+                    Toast.makeText(this, "내정보 조회 완료", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .addOnFailureListener { e ->
+                if (showToastOnSuccess) {
+                    Toast.makeText(this, "조회 실패: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+    }
+}

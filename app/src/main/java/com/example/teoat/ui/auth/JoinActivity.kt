@@ -39,6 +39,10 @@ class JoinActivity : AppCompatActivity() {
                 Toast.makeText(this, "모든 항목을 입력해 주세요.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+            if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                Toast.makeText(this, "이메일 형식이 올바르지 않습니다.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
             if (pw != pw2) {
                 Toast.makeText(this, "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -90,8 +94,10 @@ class JoinActivity : AppCompatActivity() {
                     }
             }
             .addOnFailureListener { e ->
-                Toast.makeText(this, "회원가입 실패: ${e.message}", Toast.LENGTH_SHORT).show()
+                auth.currentUser?.delete()
+                Toast.makeText(this, "DB 저장 실패: ${e.message}", Toast.LENGTH_SHORT).show()
             }
+
     }
 
     private fun goMain() {

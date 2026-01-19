@@ -1,60 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="24dp">
 
-    <ImageView
-        android:id="@+id/ivProfile"
-        android:layout_width="140dp"
-        android:layout_height="140dp"
-        android:src="@mipmap/ic_launcher"
-        android:contentDescription="@null"
+    <EditText
+        android:id="@+id/etName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="이름"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="40dp"/>
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <EditText
-        android:id="@+id/etId"
+        android:id="@+id/etRegion"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="이메일"
-        app:layout_constraintTop_toBottomOf="@id/ivProfile"
+        android:hint="거주지역"
+        app:layout_constraintTop_toBottomOf="@id/etName"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="32dp"/>
+        android:layout_marginTop="16dp"/>
 
     <EditText
-        android:id="@+id/etPw"
+        android:id="@+id/etAge"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="비밀번호"
-        android:inputType="textPassword"
-        app:layout_constraintTop_toBottomOf="@id/etId"
+        android:hint="나이"
+        android:inputType="number"
+        app:layout_constraintTop_toBottomOf="@id/etRegion"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp"/>
 
     <Button
-        android:id="@+id/btnLogin"
+        android:id="@+id/btnSave"
         android:layout_width="0dp"
         android:layout_height="56dp"
-        android:text="로그인"
-        app:layout_constraintTop_toBottomOf="@id/etPw"
+        android:text="저장"
+        app:layout_constraintTop_toBottomOf="@id/etAge"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/btnGoJoin"
+        app:layout_constraintEnd_toStartOf="@id/btnCancel"
         app:layout_constraintWidth_percent="0.48"
         android:layout_marginTop="24dp"/>
 
     <Button
-        android:id="@+id/btnGoJoin"
+        android:id="@+id/btnCancel"
         android:layout_width="0dp"
         android:layout_height="56dp"
-        android:text="회원가입"
-        app:layout_constraintTop_toBottomOf="@id/etPw"
-        app:layout_constraintStart_toEndOf="@id/btnLogin"
+        android:text="취소"
+        app:layout_constraintTop_toBottomOf="@id/etAge"
+        app:layout_constraintStart_toEndOf="@id/btnSave"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintWidth_percent="0.48"
         android:layout_marginTop="24dp"/>
