@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Widget.TeoAt.PrimaryButton" parent="">
+        <item name="android:background">@drawable/bg_teoat_button</item>
+        <item name="android:textColor">@color/teoat_on_primary</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:paddingLeft">@dimen/teoat_spacing_md</item>
+        <item name="android:paddingRight">@dimen/teoat_spacing_md</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="Widget.TeoAt.PrimaryButton.Large" parent="Widget.TeoAt.PrimaryButton">
+        <item name="android:minHeight">@dimen/teoat_btn_height_lg</item>
+    </style>
+
+    <style name="Widget.TeoAt.PrimaryButton.Medium" parent="Widget.TeoAt.PrimaryButton">
+        <item name="android:minHeight">@dimen/teoat_btn_height_md</item>
+    </style>
+
+    <style name="TextAppearance.TeoAt.Title" parent="">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/teoat_on_primary</item>
+    </style>
+</resources>

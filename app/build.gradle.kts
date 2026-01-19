@@ -67,4 +67,10 @@ dependencies {
     // ViewModel 및 Coroutine
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.10.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.10.0")
+
+    // 메인 액티비티 내 이벤트 홍보 배너용
+    implementation("androidx.viewpager2:viewpager2:1.1.0")
+    implementation("com.google.android.material:material:1.13.0")
+    // 이미지 로딩을 위한 라이브러리
+    implementation("com.github.bumptech.glide:glide:4.9.0")
 }

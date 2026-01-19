@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="teoat_radius"> 16dp </dimen>
+    <dimen name="teoat_btn_height_md">56dp</dimen>
+    <dimen name="teoat_btn_height_lg">64dp</dimen>
+    <dimen name="teoat_padding_screen">20dp</dimen>
+    <dimen name="teoat_spacing_sm">10dp</dimen>
+    <dimen name="teoat_spacing_md">16dp</dimen>
+    <dimen name="teoat_spacing_lg">24dp</dimen>
+</resources>

@@ -14,6 +14,7 @@ import com.example.teoat.R
 import com.example.teoat.databinding.ActivityBaseBinding
 import com.example.teoat.ui.chatbot.ChatbotActivity
 import com.example.teoat.ui.main.MainActivity
+import com.example.teoat.ui.mypage.MyPageActivity
 import com.google.firebase.ai.type.content
 
 open class BaseActivity : AppCompatActivity() {
@@ -61,10 +62,10 @@ open class BaseActivity : AppCompatActivity() {
 
             // 마이페이지 버튼
             ivToolbarMypage.setOnClickListener {
-                startActivity(Intent(this@BaseActivity, MainActivity::class.java))
+                startActivity(Intent(this@BaseActivity, MyPageActivity::class.java))
             }
 
-            // 마이페이지 버튼
+            // 알림창 버튼
             ivToolbarNotice.setOnClickListener {
                 startActivity(Intent(this@BaseActivity, MainActivity::class.java))
             }
@@ -80,14 +81,10 @@ open class BaseActivity : AppCompatActivity() {
                 }
 
                 R.id.nav_mypage -> {
-                    startActivity(Intent(this, MainActivity::class.java))
+                    startActivity(Intent(this, MyPageActivity::class.java))
                 }
 
                 R.id.nav_calendar -> {
-                    startActivity(Intent(this, MainActivity::class.java))
-                }
-
-                R.id.nav_card_manage -> {
                     startActivity(Intent(this, MainActivity::class.java))
                 }
 

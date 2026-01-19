@@ -16,11 +16,20 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TeoAt">
 
+        <activity android:name=".ui.auth.JoinActivity"
+            android:exported="false" />
+        <activity android:name=".ui.auth.LoginActivity"
+            android:exported="false" />
+
+        <activity android:name=".ui.mypage.EditMyInfoActivity"
+            android:exported="false" />
+        <activity android:name=".ui.mypage.EditProfileActivity"
+            android:exported="false" />
+        <activity android:name=".ui.mypage.MyPageActivity"
+            android:exported="false" />
+
         <activity
             android:name=".base.BaseActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.join.JoinActivity"
             android:exported="false" />
         <activity
             android:name=".ui.chatbot.ChatbotActivity"
