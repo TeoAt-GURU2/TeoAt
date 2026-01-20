@@ -32,7 +32,7 @@
             android:name=".ui.chatbot.ChatbotActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.map.StoreActivity"
+            android:name=".ui.map.FacilityActivity"
             android:exported="true">
 
             <intent-filter>
