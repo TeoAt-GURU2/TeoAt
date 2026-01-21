@@ -14,6 +14,9 @@ import com.example.teoat.databinding.ActivityMainBinding
 import com.example.teoat.ui.chatbot.ChatbotActivity
 import com.example.teoat.ui.main.adapter.BannerAdapter
 import com.example.teoat.ui.main.adapter.BannerItem
+import com.example.teoat.ui.map.FacilityActivity
+import com.example.teoat.ui.map.Store
+import com.example.teoat.ui.map.StoreActivity
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.delay
@@ -52,7 +55,32 @@ class MainActivity : BaseActivity() {
             }
         }
 
-        findViewById<Button>(R.id.btnCardManage).setOnClickListener {
+        // "청소년 정책 찾기" 버튼 클릭 리스너
+        binding.btnPolicy.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
+
+        // "복지 시설 찾기" 버튼 클릭 리스너
+        binding.btnFacility.setOnClickListener {
+            val intent = Intent(this, FacilityActivity::class.java)
+            startActivity(intent)
+        }
+
+        // "캘린더 보기" 버튼 클릭 리스너
+        binding.btnCalendar.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
+
+        // "급식 카드 가맹점" 버튼 클릭 리스너
+        binding.btnStore.setOnClickListener {
+            val intent = Intent(this, StoreActivity::class.java)
+            startActivity(intent)
+        }
+
+        // "급식 카드 관리" 버튼 클릭 리스너
+        binding.btnCardManage.setOnClickListener {
             val url = "https://www.gg.go.kr/gdream/view/fma/ordmain/main"
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
             startActivity(intent)

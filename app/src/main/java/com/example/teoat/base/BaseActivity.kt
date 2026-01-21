@@ -1,6 +1,7 @@
 package com.example.teoat.base
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
@@ -14,6 +15,7 @@ import com.example.teoat.R
 import com.example.teoat.databinding.ActivityBaseBinding
 import com.example.teoat.ui.chatbot.ChatbotActivity
 import com.example.teoat.ui.main.MainActivity
+import com.example.teoat.ui.map.FacilityActivity
 import com.example.teoat.ui.map.StoreActivity
 import com.example.teoat.ui.mypage.MyPageActivity
 import com.google.firebase.ai.type.content
@@ -89,12 +91,18 @@ open class BaseActivity : AppCompatActivity() {
                     startActivity(Intent(this, MainActivity::class.java))
                 }
 
+                R.id.nav_card_manage -> {
+                    val url = "https://www.gg.go.kr/gdream/view/fma/ordmain/main"
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                    startActivity(intent)
+                }
+
                 R.id.nav_store -> {
                     startActivity(Intent(this, StoreActivity::class.java))
                 }
 
                 R.id.nav_facility -> {
-                    startActivity(Intent(this, MainActivity::class.java))
+                    startActivity(Intent(this, FacilityActivity::class.java))
                 }
 
                 R.id.nav_policy -> {

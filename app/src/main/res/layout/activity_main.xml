@@ -19,10 +19,10 @@
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayoutIndicator"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="10dp"
+        android:layout_marginHorizontal="60dp"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/viewPagerBanner"
@@ -31,37 +31,6 @@
         app:tabPaddingEnd="8dp"
         app:tabPaddingStart="8dp" />
 
-    <LinearLayout
-        android:id="@+id/layout_main_input"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="15dp"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.448"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tabLayoutIndicator"
-        app:layout_constraintVertical_bias="0.0">
-
-        <EditText
-            android:id="@+id/et_initial_query"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@android:drawable/edit_text"
-            android:hint="예: 급식카드 가맹점을 찾아줘"
-            android:inputType="text"
-            android:maxLines="1" />
-
-        <Button
-            android:id="@+id/btn_start_chat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="검색" />
-    </LinearLayout>
 
     <ScrollView
         android:id="@+id/scroll"
@@ -71,34 +40,116 @@
         android:layout_marginHorizontal="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/layout_main_input">
+        app:layout_constraintTop_toBottomOf="@+id/tabLayoutIndicator">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <Button
-                android:id="@+id/btnStore"
-                style="@style/Widget.TeoAt.PrimaryButton.Large"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/layout_main_input"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="급식카드\n가맹점 찾기"
-                app:layout_constraintEnd_toStartOf="@id/btnCardManage"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintWidth_percent="0.48" />
-
-            <Button
-                android:id="@+id/btnCardManage"
-                style="@style/Widget.TeoAt.PrimaryButton.Large"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="급식카드\n관리하기"
+                android:layout_marginHorizontal="15dp"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/btnStore"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintWidth_percent="0.48" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
+                <EditText
+                    android:id="@+id/et_initial_query"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@android:drawable/edit_text"
+                    android:hint="예: 급식카드 가맹점을 찾아줘"
+                    android:inputType="text"
+                    android:maxLines="1" />
+
+                <Button
+                    android:id="@+id/btn_start_chat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="전송" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_main_btn3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="15dp"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/layout_main_input">
+
+                <Button
+                    android:id="@+id/btnPolicy"
+                    style="@style/Widget.TeoAt.PrimaryButton.Medium"
+                    android:layout_width="0dp"
+                    android:layout_height="70dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="4dp"
+                    android:gravity="center"
+                    android:text="청소년 정책\n찾기" />
+
+                <Button
+                    android:id="@+id/btnFacility"
+                    style="@style/Widget.TeoAt.PrimaryButton.Medium"
+                    android:layout_width="0dp"
+                    android:layout_height="70dp"
+                    android:layout_weight="1"
+                    android:layout_marginHorizontal="4dp"
+                    android:gravity="center"
+                    android:text="복지 시설\n찾기" />
+
+                <Button
+                    android:id="@+id/btnCalendar"
+                    style="@style/Widget.TeoAt.PrimaryButton.Medium"
+                    android:layout_width="0dp"
+                    android:layout_height="70dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="4dp"
+                    android:gravity="center"
+                    android:text="내 정책·행사\n일정 보기" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_main_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="15dp"
+                android:layout_marginVertical="10dp"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/layout_main_btn3">
+
+                <Button
+                    android:id="@+id/btnStore"
+                    style="@style/Widget.TeoAt.PrimaryButton.Large"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="4dp"
+                    android:gravity="center"
+                    android:text="급식카드\n가맹점 찾기" />
+
+                <Button
+                    android:id="@+id/btnCardManage"
+                    style="@style/Widget.TeoAt.PrimaryButton.Large"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="4dp"
+                    android:gravity="center"
+                    android:text="급식카드\n관리하기" />
+
+            </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>

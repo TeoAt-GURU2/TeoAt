@@ -41,7 +41,7 @@ class LoginActivity : AppCompatActivity() {
                     }
                     session.setLoggedIn(uid)
                     Toast.makeText(this, "로그인 성공", Toast.LENGTH_SHORT).show()
-                    goMain()
+                    finish()
                 }
                 .addOnFailureListener { e ->
                     Toast.makeText(this, "로그인 실패: ${e.message}", Toast.LENGTH_SHORT).show()
@@ -51,12 +51,5 @@ class LoginActivity : AppCompatActivity() {
         binding.btnGoJoin.setOnClickListener {
             startActivity(Intent(this, JoinActivity::class.java))
         }
-    }
-
-    private fun goMain() {
-        val intent = Intent(this, MainActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-        startActivity(intent)
-        finish()
     }
 }

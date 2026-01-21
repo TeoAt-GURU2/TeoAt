@@ -28,7 +28,12 @@ class MyPageActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         syncSessionWithFirebase()
-        if (session.isLoggedIn()) showLoggedInUi() else showLoggedOutUi()
+        if (session.isLoggedIn()) {
+            showLoggedInUi()
+        } else {
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun syncSessionWithFirebase() {
@@ -88,6 +93,9 @@ class MyPageActivity : AppCompatActivity() {
             session.logout()
             Toast.makeText(this, "로그아웃", Toast.LENGTH_SHORT).show()
             showLoggedOutUi()
+
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
         }
     }
 

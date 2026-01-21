@@ -199,7 +199,7 @@ class StoreActivity : BaseActivity(), OnMapReadyCallback {
             }
 
             override fun onFailure(call: retrofit2.Call<StoreResponse>, t: Throwable) {
-                // 실패 처리 (토스트 메시지 등)
+                Toast.makeText(this@StoreActivity, "데이터를 불러오지 못했습니다.", Toast.LENGTH_SHORT).show()
             }
         })
     }

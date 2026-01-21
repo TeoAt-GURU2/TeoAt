@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
-    tools:context=".ui.map.StoreActivity">
+    tools:context=".ui.map.FacilityActivity">
 
     <LinearLayout
         android:id="@+id/layout_search_header"
@@ -38,7 +38,6 @@
                 android:textSize="16sp"
                 android:autofillHints="none"
                 android:inputType="text"
-
                 android:drawableEnd="@android:drawable/ic_menu_search"
                 android:drawablePadding="8dp"
                 app:drawableTint="#FFFFFF" />
@@ -77,31 +76,61 @@
         android:layout_height="45dp"
         android:background="#FFFFFF"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@id/rv_store_list">
+        app:layout_constraintBottom_toTopOf="@id/rv_facility_list">
 
         <View android:layout_width="1dp" android:layout_height="match_parent" android:background="#000000" />
 
-        <TextView android:layout_width="50dp" android:layout_height="match_parent" android:gravity="center" android:text="★" android:textColor="#000000" />
+        <TextView
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="★"
+            android:textColor="#000000" />
 
         <View android:layout_width="1dp" android:layout_height="match_parent" android:background="#000000" />
 
-        <TextView android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="center" android:text="가맹점" android:textStyle="bold" android:textColor="#000000" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="시설"
+            android:textStyle="bold"
+            android:textColor="#000000" />
 
         <View android:layout_width="1dp" android:layout_height="match_parent" android:background="#000000" />
 
-        <TextView android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1.5" android:gravity="center" android:text="주소" android:textStyle="bold" android:textColor="#000000" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="주소"
+            android:textStyle="bold"
+            android:textColor="#000000" />
+
+        <View android:layout_width="1dp" android:layout_height="match_parent" android:background="#000000" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="전화번호"
+            android:textStyle="bold"
+            android:textColor="#000000" />
 
         <View android:layout_width="1dp" android:layout_height="match_parent" android:background="#000000" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_store_list"
+        android:id="@+id/rv_facility_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="#FFFFFF"
         app:layout_constraintHeight_percent="0.35"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:listitem="@layout/item_store_row" />
+        tools:listitem="@layout/item_facility_row" />
 
     <View
         android:layout_width="match_parent"
