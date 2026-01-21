@@ -3,8 +3,10 @@ package com.example.teoat.base
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.Menu
 import android.view.View
 import android.widget.FrameLayout
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
@@ -64,15 +66,17 @@ open class BaseActivity : AppCompatActivity() {
             }
 
             // 마이페이지 버튼
-            ivToolbarMypage.setOnClickListener {
-                startActivity(Intent(this@BaseActivity, MyPageActivity::class.java))
-            }
+            ivToolbarMypage.setOnClickListener { startActivity(Intent(this@BaseActivity, MyPageActivity::class.java)) }
 
             // 알림창 버튼
-            ivToolbarNotice.setOnClickListener {
-                startActivity(Intent(this@BaseActivity, MainActivity::class.java))
-            }
+            ivToolbarNotice.setOnClickListener { startActivity(Intent(this@BaseActivity, MainActivity::class.java)) }
         }
+
+        // 네비게이션 드로어 메뉴 헤더 디자인 적용하기
+        val menu = baseBinding.navigationView.menu
+
+        setHeaderTitle(menu, R.id.header_facility, "내 주변 시설")
+        setHeaderTitle(menu, R.id.header_info, "정보 및 지원")
 
         // 네비게이션 드로어 메뉴 클릭 리스너
         baseBinding.navigationView.setNavigationItemSelectedListener { menuItem ->
@@ -82,44 +86,30 @@ open class BaseActivity : AppCompatActivity() {
                     intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
                     startActivity(intent)
                 }
-
-                R.id.nav_mypage -> {
-                    startActivity(Intent(this, MyPageActivity::class.java))
-                }
-
-                R.id.nav_calendar -> {
-                    startActivity(Intent(this, MainActivity::class.java))
-                }
-
+                R.id.nav_mypage -> { startActivity(Intent(this, MyPageActivity::class.java)) }
+                R.id.nav_calendar -> { startActivity(Intent(this, MainActivity::class.java)) }
                 R.id.nav_card_manage -> {
                     val url = "https://www.gg.go.kr/gdream/view/fma/ordmain/main"
                     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                     startActivity(intent)
                 }
-
-                R.id.nav_store -> {
-                    startActivity(Intent(this, StoreActivity::class.java))
-                }
-
-                R.id.nav_facility -> {
-                    startActivity(Intent(this, FacilityActivity::class.java))
-                }
-
-                R.id.nav_policy -> {
-                    startActivity(Intent(this, MainActivity::class.java))
-                }
-
-                R.id.nav_event -> {
-                    startActivity(Intent(this, MainActivity::class.java))
-                }
-
-                R.id.nav_chatbot -> {
-                    startActivity(Intent(this, ChatbotActivity::class.java))
-                }
+                R.id.nav_store -> { startActivity(Intent(this, StoreActivity::class.java)) }
+                R.id.nav_facility -> { startActivity(Intent(this, FacilityActivity::class.java)) }
+                R.id.nav_policy -> { startActivity(Intent(this, MainActivity::class.java)) }
+                R.id.nav_event -> { startActivity(Intent(this, MainActivity::class.java)) }
+                R.id.nav_chatbot -> { startActivity(Intent(this, ChatbotActivity::class.java)) }
             }
             baseBinding.drawerLayout.closeDrawer(GravityCompat.END)
             true
         }
+    }
+
+    private fun setHeaderTitle(menu: Menu, itemId: Int,title: String) {
+        val item = menu.findItem(itemId)
+        val view = item?.actionView
+
+        val tvTitle = view?.findViewById<TextView>(R.id.tv_header_title)
+        tvTitle?.text = title
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

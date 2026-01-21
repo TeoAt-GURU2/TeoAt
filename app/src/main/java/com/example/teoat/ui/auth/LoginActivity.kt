@@ -50,7 +50,7 @@ class LoginActivity : AppCompatActivity() {
                     intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
                     startActivity(intent)
 
-                    finish() // 로그인 창 닫기ㅁ
+                    finish() // 로그인 창 닫기
                 }
                 .addOnFailureListener { e ->
                     Toast.makeText(this, "로그인 실패: ${e.message}", Toast.LENGTH_SHORT).show()
