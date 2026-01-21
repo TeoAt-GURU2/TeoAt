@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.teoat.common.SessionManager
 import com.example.teoat.databinding.ActivityLoginBinding
 import com.example.teoat.ui.main.MainActivity
+import com.example.teoat.ui.mypage.MyPageActivity
 import com.google.firebase.auth.FirebaseAuth
 
 class LoginActivity : AppCompatActivity() {
@@ -41,7 +42,15 @@ class LoginActivity : AppCompatActivity() {
                     }
                     session.setLoggedIn(uid)
                     Toast.makeText(this, "로그인 성공", Toast.LENGTH_SHORT).show()
-                    finish()
+
+                    val intent = Intent(this, MyPageActivity::class.java)
+                    startActivity(intent)
+
+                    // 기존 스택을 정리하고 새로 시작
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                    startActivity(intent)
+
+                    finish() // 로그인 창 닫기ㅁ
                 }
                 .addOnFailureListener { e ->
                     Toast.makeText(this, "로그인 실패: ${e.message}", Toast.LENGTH_SHORT).show()

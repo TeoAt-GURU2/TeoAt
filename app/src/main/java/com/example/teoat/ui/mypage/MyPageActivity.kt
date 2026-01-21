@@ -27,12 +27,18 @@ class MyPageActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+
+        // 현재 로그인 상태 확인
         syncSessionWithFirebase()
+
+        // 로그인이 되어 있으면 showLoggedInUi 호출
         if (session.isLoggedIn()) {
             showLoggedInUi()
         } else {
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
+
+            finish()
         }
     }
 
@@ -45,20 +51,23 @@ class MyPageActivity : AppCompatActivity() {
         }
     }
 
+    // 로그인이 되어 있지 "않은" 상태의 화면
     private fun showLoggedOutUi() {
         val binding = ActivityMypageLoggedOutBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // 로그인 버튼 클릭 시 : Login 액티비티로 이동
         binding.btnLogin.setOnClickListener {
             startActivity(Intent(this, LoginActivity::class.java))
         }
 
+        // 회원가입 버튼 클릭시 : Join 액티비티로 이동
         binding.btnGoJoin.setOnClickListener {
             startActivity(Intent(this, JoinActivity::class.java))
         }
-
     }
 
+    // 로그인된 상태의 화면
     private fun showLoggedInUi() {
         val binding = ActivityMypageLoggedInBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -88,14 +97,17 @@ class MyPageActivity : AppCompatActivity() {
         binding.btnEdit.setOnClickListener {
             startActivity(Intent(this, EditProfileActivity::class.java))
         }
+
         binding.btnLogout.setOnClickListener {
+            // 로그아웃 처리
             auth.signOut()
             session.logout()
             Toast.makeText(this, "로그아웃", Toast.LENGTH_SHORT).show()
-            showLoggedOutUi()
 
+            // 바로 로그인 화면 띄우기
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
+            finish()
         }
     }
 
