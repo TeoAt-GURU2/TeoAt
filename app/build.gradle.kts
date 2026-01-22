@@ -76,12 +76,15 @@ dependencies {
     // 이미지 로딩을 위한 라이브러리
     implementation("com.github.bumptech.glide:glide:4.9.0")
 
-    //구글 지도
+    // 구글 지도
     implementation("com.google.android.gms:play-services-maps:18.2.0")
     implementation("com.google.android.material:material:1.9.0")
     implementation("com.google.android.gms:play-services-location:21.0.1")
 
-    //급식카드가맹점 API
+    // 가맹점, 복지시설 조회 API 불러올 때
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    // 알림 전송 관련 WorkManager <- 백그라운드 작업
+    implementation("androidx.work:work-runtime-ktx:2.11.0")
 }

@@ -8,6 +8,9 @@ import android.widget.Toast
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.example.teoat.R
 import com.example.teoat.base.BaseActivity
 import com.example.teoat.databinding.ActivityMainBinding
@@ -17,10 +20,12 @@ import com.example.teoat.ui.main.adapter.BannerItem
 import com.example.teoat.ui.map.FacilityActivity
 import com.example.teoat.ui.map.Store
 import com.example.teoat.ui.map.StoreActivity
+import com.example.teoat.worker.NotiWorker
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
 
 class MainActivity : BaseActivity() {
 
@@ -37,6 +42,9 @@ class MainActivity : BaseActivity() {
 
         // 이벤트 홍보 배너 설정
         setupBanner()
+
+        // 백그라운드 알림 체크 예약
+        setupNotificationWorker()
 
         // 검색(채팅 시작) 버튼 클릭 시에
         binding.btnStartChat.setOnClickListener {
@@ -126,6 +134,17 @@ class MainActivity : BaseActivity() {
                 }
             }
         }
+    }
+
+    private fun setupNotificationWorker() {
+        val workRequest = PeriodicWorkRequestBuilder<NotiWorker>(24, TimeUnit.HOURS)
+            .build()
+
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+            "DailyEventCheck",
+            ExistingPeriodicWorkPolicy.KEEP,    // 이미 예약되어 있다면 유지 (중복 실행 방지)
+            workRequest
+        )
     }
 
     override fun onResume() {

@@ -3,26 +3,40 @@ package com.example.teoat.base
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.se.omapi.Session
 import android.view.Menu
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.teoat.R
+import com.example.teoat.common.SessionManager
+import com.example.teoat.data.model.NotificationModel
 import com.example.teoat.databinding.ActivityBaseBinding
 import com.example.teoat.ui.chatbot.ChatbotActivity
 import com.example.teoat.ui.main.MainActivity
 import com.example.teoat.ui.map.FacilityActivity
 import com.example.teoat.ui.map.StoreActivity
 import com.example.teoat.ui.mypage.MyPageActivity
+import com.example.teoat.ui.notification.NotiAdapter
 import com.google.firebase.ai.type.content
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 
 open class BaseActivity : AppCompatActivity() {
+
+    // 알림 기능을 위한 변수들
+    private lateinit var db : FirebaseFirestore
+    private lateinit var session : SessionManager
+    private val notiList = mutableListOf<NotificationModel>()
+    private lateinit var notiAdapter: NotiAdapter
 
     // BaseActivity용 바인딩 객체 선언
     protected lateinit var baseBinding : ActivityBaseBinding
@@ -37,14 +51,22 @@ open class BaseActivity : AppCompatActivity() {
         super.setContentView(baseBinding.root)
 
         // 툴바 및 네비게이션 초기화
-        initToolbar()
+        initCommon()
     }
 
     override fun setContentView(view: View?) {
         baseBinding = ActivityBaseBinding.inflate(layoutInflater)
         baseBinding.contentFrame.addView(view)
         super.setContentView(baseBinding.root)
+        initCommon()
+    }
+
+    private fun initCommon() {
+        db = FirebaseFirestore.getInstance()
+        session = SessionManager(this)
+
         initToolbar()
+        initNotificationUI()
     }
 
     private fun initToolbar() {
@@ -69,7 +91,7 @@ open class BaseActivity : AppCompatActivity() {
             ivToolbarMypage.setOnClickListener { startActivity(Intent(this@BaseActivity, MyPageActivity::class.java)) }
 
             // 알림창 버튼
-            ivToolbarNotice.setOnClickListener { startActivity(Intent(this@BaseActivity, MainActivity::class.java)) }
+            ivToolbarNotice.setOnClickListener { openNotificationPannel() }
         }
 
         // 네비게이션 드로어 메뉴 헤더 디자인 적용하기
@@ -102,6 +124,48 @@ open class BaseActivity : AppCompatActivity() {
             baseBinding.drawerLayout.closeDrawer(GravityCompat.END)
             true
         }
+    }
+
+    private fun initNotificationUI() {
+        notiAdapter = NotiAdapter(notiList)
+        baseBinding.rvNotificationList.layoutManager = LinearLayoutManager(this)
+        baseBinding.rvNotificationList.adapter = notiAdapter
+
+        // 닫기 버튼
+        baseBinding.btnCloseNoti.setOnClickListener { baseBinding.flNotificationContainer.visibility = View.GONE }
+
+        // 오버레이 바깥쪽 클릭 시에 닫기
+        baseBinding.flNotificationContainer.setOnClickListener { baseBinding.flNotificationContainer.visibility = View.GONE }
+    }
+
+    // 알림 데이터 불러오기 및 창 열기
+    private fun openNotificationPannel() {
+        if (!session.isLoggedIn()) {
+            Toast.makeText(this, "로그인이 필요한 기능입니다.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // 알림창 보이기
+        baseBinding.flNotificationContainer.visibility = View.VISIBLE
+
+        val uid = session.getUserId() ?: return
+
+        // Firestore 조회
+        db.collection("users").document(uid)
+            .collection("notifications")
+            .orderBy("timestamp", Query.Direction.DESCENDING)
+            .get()
+            .addOnSuccessListener { result ->
+                notiList.clear()
+                for (doc in result) {
+                    val noti = doc.toObject(NotificationModel::class.java)
+                    notiList.add(noti)
+                }
+                notiAdapter.notifyDataSetChanged()
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "알림 목록을 불러오지 못했습니다.", Toast.LENGTH_SHORT).show()
+            }
     }
 
     private fun setHeaderTitle(menu: Menu, itemId: Int,title: String) {
