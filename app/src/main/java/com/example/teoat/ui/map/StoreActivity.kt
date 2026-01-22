@@ -268,7 +268,7 @@ class StoreActivity : BaseActivity(), OnMapReadyCallback {
         }
     }
 
-    // 4. 내 즐겨찾기 동기화 함수 추가
+    // 내 즐겨찾기 동기화 함수 추가
     private fun syncFavorites() {
         val user = auth.currentUser ?: return
 
@@ -284,7 +284,6 @@ class StoreActivity : BaseActivity(), OnMapReadyCallback {
                 refreshUI()
             }
             .addOnFailureListener {
-                // 실패 시에도 일단 화면은 보여줌
                 refreshUI()
             }
 
