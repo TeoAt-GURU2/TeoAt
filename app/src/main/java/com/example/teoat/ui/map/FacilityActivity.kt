@@ -29,6 +29,8 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class FacilityActivity : BaseActivity(), OnMapReadyCallback {
 
@@ -38,6 +40,10 @@ class FacilityActivity : BaseActivity(), OnMapReadyCallback {
     private var isFavoriteMode = false
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val markerMap = HashMap<String, Marker>()
+
+    // Firebase 변수
+    private val auth = FirebaseAuth.getInstance()
+    private val db = FirebaseFirestore.getInstance()
 
     // 바인딩 변수 선언
     private lateinit var binding: ActivityFacilityBinding
@@ -59,7 +65,16 @@ class FacilityActivity : BaseActivity(), OnMapReadyCallback {
         // 3. 어댑터 설정
         adapter = FacilityAdapter(allFacilities,
             onFavoriteClick = { facility ->
+                val user = auth.currentUser
+                if (user == null) {
+                    Toast.makeText(this, "로그인이 필요한 기능입니다.", Toast.LENGTH_SHORT).show()
+                    return@FacilityAdapter
+                }
+
+                // 상태 반전 및 Firestore 업데이트
                 facility.isFavorite = !facility.isFavorite
+                toggleFavoriteInFirestore(user.uid, facility)
+
                 applyFilters(binding.etSearch.text.toString())
             },
             onItemClick = { facility ->
@@ -159,27 +174,33 @@ class FacilityActivity : BaseActivity(), OnMapReadyCallback {
             .build()
 
         val apiService = retrofit.create(ApiService::class.java)
-        val myApiKey = BuildConfig.MCS_API_KEY // BuildConfig에 키가 설정되어 있어야 합니다.
+        val myApiKey = BuildConfig.MCS_API_KEY
 
-        // 청소년시설 현황 API 호출 (Youngbgfacltinst)
         apiService.getFacilities(key = myApiKey).enqueue(object : Callback<FacilityResponse> {
             override fun onResponse(call: Call<FacilityResponse>, response: Response<FacilityResponse>) {
                 if (response.isSuccessful) {
-                    // API 문서 구조에 맞게 수정 (Youngbgfacltinst 경로 확인 필요)
+                    // 1. 기존 리스트 초기화 (중복 방지)
+                    allFacilities.clear()
+
+                    // 2. API로부터 받은 데이터를 Facility 객체로 변환하여 리스트에 담기
                     val items = response.body()?.Youngbgfacltinst?.get(1)?.row
                     items?.forEach { item ->
                         allFacilities.add(Facility(
-                            id = item.INST_NM ?: "", // 기관명
+                            id = item.INST_NM ?: "", // 기관명을 고유 ID로 사용
                             name = item.INST_NM ?: "이름 없음",
                             address = item.REFINE_ROADNM_ADDR ?: "주소 없음",
-                            phone = item.TELNO ?: "번호 없음", // 전화번호 추가
+                            phone = item.TELNO ?: "번호 없음",
                             latitude = item.REFINE_WGS84_LAT?.toDoubleOrNull() ?: 37.0,
                             longitude = item.REFINE_WGS84_LOGT?.toDoubleOrNull() ?: 127.0
                         ))
                     }
-                    runOnUiThread {
-                        adapter.notifyDataSetChanged()
-                        addMarkersToMap(allFacilities)
+
+                    // 3. [중요] 데이터를 다 불러온 후, 로그인 상태라면 즐겨찾기 동기화 시작
+                    if (auth.currentUser != null) {
+                        syncFavorites()
+                    } else {
+                        // 로그인 안 된 상태라면 바로 화면 갱신
+                        refreshUI()
                     }
                 }
             }
@@ -188,6 +209,14 @@ class FacilityActivity : BaseActivity(), OnMapReadyCallback {
                 Toast.makeText(this@FacilityActivity, "데이터를 불러오지 못했습니다.", Toast.LENGTH_SHORT).show()
             }
         })
+    }
+
+    // UI 갱신 로직을 별도 함수로 분리하여 재사용성 높임
+    private fun refreshUI() {
+        runOnUiThread {
+            adapter.notifyDataSetChanged()
+            addMarkersToMap(allFacilities)
+        }
     }
 
     private fun moveToCurrentLocation() {
@@ -205,5 +234,48 @@ class FacilityActivity : BaseActivity(), OnMapReadyCallback {
                 Toast.makeText(this, "현재 위치를 불러올 수 없습니다.", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    //Firestore에 즐겨찾기 저장/삭제
+    private fun toggleFavoriteInFirestore(userId: String, facility: Facility) {
+        val favRef = db.collection("users").document(userId)
+            .collection("favorites").document(facility.id)
+
+        if (facility.isFavorite) {
+            val data = hashMapOf(
+                "name" to facility.name,
+                "address" to facility.address,
+                "id" to facility.id
+            )
+            favRef.set(data)
+        } else {
+            favRef.delete()
+        }
+    }
+
+    //내 즐겨찾기 목록을 가져와서 API 데이터와 동기화
+    private fun syncFavorites() {
+        val user = auth.currentUser ?: return
+
+        // Firestore에서 해당 사용자의 즐겨찾기 컬렉션 전체 가져오기
+        db.collection("users").document(user.uid).collection("favorites")
+            .get()
+            .addOnSuccessListener { documents ->
+                // 저장된 즐겨찾기 문서들의 ID(시설명) 리스트 추출
+                val favoriteIds = documents.map { it.id }
+
+                // API로 불러온 전체 리스트를 돌면서, 내 즐겨찾기에 포함된 시설은 isFavorite를 true로 변경
+                allFacilities.forEach { facility ->
+                    if (favoriteIds.contains(facility.id)) {
+                        facility.isFavorite = true
+                    }
+                }
+                // 동기화 완료 후 화면 갱신
+                refreshUI()
+            }
+            .addOnFailureListener {
+                // 실패 시에도 일단 화면은 보여줌
+                refreshUI()
+            }
     }
 }

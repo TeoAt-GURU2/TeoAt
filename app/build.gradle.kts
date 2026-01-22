@@ -85,3 +85,11 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 }
+
+secrets {
+    // 기본값인 local.properties 대신 secrets.properties를 읽게 설정
+    propertiesFileName = "secrets.properties"
+
+    // 혹시라도 대문자 변환 문제가 생기지 않도록 설정 (선택사항)
+    defaultPropertiesFileName = "local.properties"
+}

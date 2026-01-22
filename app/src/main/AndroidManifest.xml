@@ -6,7 +6,6 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
-
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -17,24 +16,43 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TeoAt">
 
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="${MAPS_API_KEY}" />
 
         <activity
+            android:name=".ui.auth.JoinActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.auth.LoginActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.mypage.EditMyInfoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.mypage.EditProfileActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.mypage.MyPageActivity"
             android:exported="false" />
 
         <activity
-            android:name=".ui.auth.JoinActivity"
+            android:name=".ui.map.StoreActivity"
             android:exported="false" />
+        <activity
+            android:name=".ui.map.FacilityActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".base.BaseActivity"
+            android:exported="true" />
         <activity
             android:name=".ui.chatbot.ChatbotActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.map.StoreActivity"
+            android:name=".ui.main.MainActivity"
             android:exported="true">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

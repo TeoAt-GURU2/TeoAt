@@ -25,7 +25,8 @@ import androidx.core.app.ActivityCompat
 import com.example.teoat.base.BaseActivity
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class StoreActivity : BaseActivity(), OnMapReadyCallback {
 
@@ -40,6 +41,12 @@ class StoreActivity : BaseActivity(), OnMapReadyCallback {
     private var isFavoriteMode = false
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val markerMap = HashMap<String, com.google.android.gms.maps.model.Marker>()
+
+    // Firebase 변수
+    private val auth = FirebaseAuth.getInstance()
+    private val db = FirebaseFirestore.getInstance()
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,17 +68,21 @@ class StoreActivity : BaseActivity(), OnMapReadyCallback {
         // 3. 어댑터 설정
         adapter = StoreAdapter(allStores,
             onFavoriteClick = { store ->
-                store.isFavorite = !store.isFavorite
-                applyFilters(etSearch.text.toString())
+                val currentUser = auth.currentUser
+                if (currentUser == null) {
+                    Toast.makeText(this, "로그인이 필요한 기능입니다.", Toast.LENGTH_SHORT).show()
+
+                } else {
+                    // 상태 반전 및 DB 업데이트
+                    store.isFavorite = !store.isFavorite
+                    toggleFavoriteInFirestore(currentUser.uid, store)
+                    applyFilters(etSearch.text.toString())
+                }
             },
             onItemClick = { store ->
                 val location = LatLng(store.latitude, store.longitude)
-                // 1. 지도를 해당 위치로 이동
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 16f))
-
-                // 2. 해당 위치의 마커를 찾아서 정보창(이름) 띄우기
-                // 기존에 추가된 마커들 중에서 좌표가 일치하는 마커를 찾아 정보를 표시합니다.
-                val marker = markerMap[store.id] // 마커를 관리하는 Map이 필요합니다.
+                val marker = markerMap[store.id]
                 marker?.showInfoWindow()
             }
         )
@@ -172,16 +183,17 @@ class StoreActivity : BaseActivity(), OnMapReadyCallback {
             .build()
 
         val apiService = retrofit.create(ApiService::class.java)
-
         val myApiKey = BuildConfig.MCS_API_KEY
 
-        // 본인의 API 키를 넣으세요 (샘플 키는 제한이 있을 수 있습니다)
         apiService.getStores(key = myApiKey).enqueue(object : retrofit2.Callback<StoreResponse> {
             override fun onResponse(call: retrofit2.Call<StoreResponse>, response: retrofit2.Response<StoreResponse>) {
                 if (response.isSuccessful) {
+                    // 1. 기존 리스트 초기화 (중복 방지)
+                    allStores.clear()
+
+                    // 2. API 데이터를 Store 모델로 변환하여 리스트에 추가
                     val items = response.body()?.GDreamCard?.get(1)?.row
                     items?.forEach { item ->
-                        // API 데이터를 우리 Store 모델로 변환
                         allStores.add(Store(
                             id = item.FACLT_NM ?: "",
                             name = item.FACLT_NM ?: "이름 없음",
@@ -190,10 +202,13 @@ class StoreActivity : BaseActivity(), OnMapReadyCallback {
                             longitude = item.REFINE_WGS84_LOGT?.toDoubleOrNull() ?: 127.0
                         ))
                     }
-                    // 데이터를 다 불러왔으면 리스트와 지도 갱신
-                    runOnUiThread {
-                        adapter.notifyDataSetChanged()
-                        addMarkersToMap(allStores)
+
+                    // 3. 데이터를 다 불러온 후, 로그인 상태라면 즐겨찾기 동기화 시작
+                    if (auth.currentUser != null) {
+                        syncFavorites() // Firestore에서 내 즐겨찾기 목록을 가져와 비교
+                    } else {
+                        // 로그인 안 된 상태라면 바로 화면 갱신
+                        refreshUI()
                     }
                 }
             }
@@ -202,6 +217,14 @@ class StoreActivity : BaseActivity(), OnMapReadyCallback {
                 Toast.makeText(this@StoreActivity, "데이터를 불러오지 못했습니다.", Toast.LENGTH_SHORT).show()
             }
         })
+    }
+
+    // UI 갱신 로직 분리 (Adapter와 Map 마커 업데이트)
+    private fun refreshUI() {
+        runOnUiThread {
+            adapter.notifyDataSetChanged()
+            addMarkersToMap(allStores)
+        }
     }
 
     private fun moveToCurrentLocation() {
@@ -226,5 +249,44 @@ class StoreActivity : BaseActivity(), OnMapReadyCallback {
                 Toast.makeText(this, "현재 위치를 불러올 수 없습니다.", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+    // Firestore 저장/삭제 함수
+    private fun toggleFavoriteInFirestore(userId: String, store: Store) {
+        // 가맹점(stores) 컬렉션에 저장
+        val favRef = db.collection("users").document(userId)
+            .collection("favorite_stores").document(store.id)
+
+        if (store.isFavorite) {
+            val data = hashMapOf(
+                "name" to store.name,
+                "address" to store.address,
+                "id" to store.id
+            )
+            favRef.set(data)
+        } else {
+            favRef.delete()
+        }
+    }
+
+    // 4. 내 즐겨찾기 동기화 함수 추가
+    private fun syncFavorites() {
+        val user = auth.currentUser ?: return
+
+        db.collection("users").document(user.uid).collection("favorite_stores")
+            .get()
+            .addOnSuccessListener { documents ->
+                val favoriteIds = documents.map { it.id }
+                allStores.forEach { store ->
+                    if (favoriteIds.contains(store.id)) {
+                        store.isFavorite = true
+                    }
+                }
+                refreshUI()
+            }
+            .addOnFailureListener {
+                // 실패 시에도 일단 화면은 보여줌
+                refreshUI()
+            }
+
     }
 }
