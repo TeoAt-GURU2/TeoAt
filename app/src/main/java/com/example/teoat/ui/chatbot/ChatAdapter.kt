@@ -14,14 +14,14 @@ class ChatAdapter : ListAdapter<ChatMessage, ChatAdapter.ChatViewHolder>(DiffCal
         : RecyclerView.ViewHolder(binding.root) {
         fun bind(message: ChatMessage) {
             if (message.isUser) {
-                // 사용자가 보낸 메세지 : 오른쪽에 보이기, 왼쪽 숨기기
+                // 사용자가 보낸 메세지
                 binding.layoutUser.visibility = View.VISIBLE
-                binding.layoutBot.visibility = View.GONE
+                binding.layoutBot.visibility = View.VISIBLE
                 binding.tvUserMsg.text = message.text
             } else {
-                // AI가 보낸 메세지 : 왼쪽에 보이기, 오른쪽 숨기기
+                // AI가 보낸 메세지
                 binding.layoutBot.visibility = View.VISIBLE
-                binding.layoutUser.visibility = View.GONE
+                binding.layoutUser.visibility = View.VISIBLE
 
                 // 로딩 중이면 "..." 표시하고, 아니면 텍스트 표시하기
                 if (message.isPending) {

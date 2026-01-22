@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <group android:checkableBehavior="single">
+        <item android:id="@+id/nav_home" android:title="홈으로" />
+        <item android:id="@+id/nav_mypage" android:title="마이페이지" />
+        <item android:id="@+id/nav_calendar" android:title="캘린더" />
+        <item android:id="@+id/nav_card_manage" android:title="급식카드 관리" />
+    </group>
+
+    <item
+        android:id="@+id/header_facility"
+        android:enabled="false"
+        app:actionLayout="@layout/item_section_header"
+        app:showAsAction="always" />
+
+    <group android:checkableBehavior="single">
+        <item android:id="@+id/nav_store" android:title="급식카드 가맹점 조회" />
+        <item android:id="@+id/nav_facility" android:title="복지 시설 조회" />
+    </group>
+
+    <item
+        android:id="@+id/header_info"
+        android:enabled="false"
+        app:actionLayout="@layout/item_section_header"
+        app:showAsAction="always" />
+
+    <group android:checkableBehavior="single">
+        <item android:id="@+id/nav_policy" android:title="복지 정책 조회" />
+        <item android:id="@+id/nav_event" android:title="행사 조회" />
+        <item android:id="@+id/nav_chatbot" android:title="AI 챗봇 상담" />
+    </group>
+
+</menu>

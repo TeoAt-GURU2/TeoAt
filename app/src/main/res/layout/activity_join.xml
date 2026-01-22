@@ -9,7 +9,7 @@
         android:id="@+id/ivProfile"
         android:layout_width="120dp"
         android:layout_height="120dp"
-        android:src="@drawable/ic_profile"
+        android:src="@drawable/baseline_person_outline_24"
         android:contentDescription="@null"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -21,16 +21,19 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="이름"
+        android:inputType="textPersonName"
         app:layout_constraintTop_toBottomOf="@id/ivProfile"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="28dp"/>
 
+    <!-- 아이디 = 이메일 -->
     <EditText
         android:id="@+id/etId"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="아이디"
+        android:hint="아이디(이메일)"
+        android:inputType="textEmailAddress"
         app:layout_constraintTop_toBottomOf="@id/etName"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -48,11 +51,23 @@
         android:layout_marginTop="16dp"/>
 
     <EditText
+        android:id="@+id/etPw2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="비밀번호 확인"
+        android:inputType="textPassword"
+        app:layout_constraintTop_toBottomOf="@id/etPw"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"/>
+
+    <EditText
         android:id="@+id/etRegion"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="거주지역"
-        app:layout_constraintTop_toBottomOf="@id/etPw"
+        android:inputType="text"
+        app:layout_constraintTop_toBottomOf="@id/etPw2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp"/>
@@ -77,5 +92,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="28dp"/>
+
+    <Button
+        android:id="@+id/btnGoLogin"
+        android:layout_width="200dp"
+        android:layout_height="56dp"
+        android:text="로그인으로"
+        app:layout_constraintTop_toBottomOf="@id/btnJoin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="12dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

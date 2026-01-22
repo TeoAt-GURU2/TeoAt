@@ -7,15 +7,14 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
-import android.widget.ImageView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.teoat.BuildConfig
 import com.example.teoat.R
+import com.example.teoat.base.BaseActivity
+import com.example.teoat.databinding.ActivityFacilityBinding
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -31,7 +30,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class FacilityActivity : AppCompatActivity(), OnMapReadyCallback {
+class FacilityActivity : BaseActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
     private lateinit var adapter: FacilityAdapter
@@ -40,17 +39,16 @@ class FacilityActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val markerMap = HashMap<String, Marker>()
 
+    // 바인딩 변수 선언
+    private lateinit var binding: ActivityFacilityBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_facility)
-
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-        // 1. 뷰 연결 (activity_facility.xml의 ID와 일치)
-        val rvFacilityList = findViewById<RecyclerView>(R.id.rv_facility_list)
-        val etSearch = findViewById<EditText>(R.id.et_search)
-        val ivTopFavorite = findViewById<ImageView>(R.id.iv_top_favorite)
-        val ivMyLocation = findViewById<ImageView>(R.id.iv_my_location)
+        // 1. 뷰 연결 삭제 -> binding 객체 사용으로 변경
+        binding = ActivityFacilityBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         // 2. 지도 설정
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
@@ -62,7 +60,7 @@ class FacilityActivity : AppCompatActivity(), OnMapReadyCallback {
         adapter = FacilityAdapter(allFacilities,
             onFavoriteClick = { facility ->
                 facility.isFavorite = !facility.isFavorite
-                applyFilters(etSearch.text.toString())
+                applyFilters(binding.etSearch.text.toString())
             },
             onItemClick = { facility ->
                 val location = LatLng(facility.latitude, facility.longitude)
@@ -72,16 +70,16 @@ class FacilityActivity : AppCompatActivity(), OnMapReadyCallback {
                 marker?.showInfoWindow()
             }
         )
-        rvFacilityList.layoutManager = LinearLayoutManager(this)
-        rvFacilityList.adapter = adapter
+        binding.rvFacilityList.layoutManager = LinearLayoutManager(this)
+        binding.rvFacilityList.adapter = adapter
 
         // 4. 검색창 터치 리스너 (돋보기 아이콘 클릭 시 검색)
-        etSearch.setOnTouchListener { v, event ->
+        binding.etSearch.setOnTouchListener { v, event ->
             if (event.action == android.view.MotionEvent.ACTION_UP) {
-                val drawableRight = etSearch.compoundDrawables[2]
-                if (drawableRight != null && event.rawX >= (etSearch.right - drawableRight.bounds.width() - etSearch.paddingEnd)) {
+                val drawableRight = binding.etSearch.compoundDrawables[2]
+                if (drawableRight != null && event.rawX >= (binding.etSearch.right - drawableRight.bounds.width() - binding.etSearch.paddingEnd)) {
                     v.performClick()
-                    applyFilters(etSearch.text.toString())
+                    applyFilters(binding.etSearch.text.toString())
                     return@setOnTouchListener true
                 }
             }
@@ -89,11 +87,11 @@ class FacilityActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         // 키보드 검색 버튼 대응
-        etSearch.setOnEditorActionListener { _, actionId, _ ->
+        binding.etSearch.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                applyFilters(etSearch.text.toString())
+                applyFilters(binding.etSearch.text.toString())
                 val imm = getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                imm.hideSoftInputFromWindow(etSearch.windowToken, 0)
+                imm.hideSoftInputFromWindow(binding.etSearch.windowToken, 0)
                 true
             } else {
                 false
@@ -101,7 +99,7 @@ class FacilityActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         // 실시간 검색 텍스트 감시
-        etSearch.addTextChangedListener(object : TextWatcher {
+        binding.etSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
@@ -110,12 +108,12 @@ class FacilityActivity : AppCompatActivity(), OnMapReadyCallback {
         })
 
         // 5. 버튼 클릭 리스너
-        ivTopFavorite.setOnClickListener {
+        binding.ivTopFavorite.setOnClickListener {
             isFavoriteMode = !isFavoriteMode
-            applyFilters(etSearch.text.toString())
+            applyFilters(binding.etSearch.text.toString())
         }
 
-        ivMyLocation.setOnClickListener {
+        binding.ivMyLocation.setOnClickListener {
             moveToCurrentLocation()
         }
     }

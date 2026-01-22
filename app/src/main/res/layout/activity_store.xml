@@ -5,61 +5,63 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
-    tools:context=".ui.map.StoreActivity"> <LinearLayout
-    android:id="@+id/layout_search_header"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:gravity="center_vertical"
-    android:orientation="horizontal"
-    android:padding="16dp"
-    android:elevation="4dp"
-    app:layout_constraintTop_toTopOf="parent">
+    tools:context=".ui.map.StoreActivity">
 
-    <com.google.android.material.card.MaterialCardView
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_weight="1"
-        app:cardBackgroundColor="#7293C1"
-        app:cardCornerRadius="25dp"
-        app:cardElevation="0dp">
+    <LinearLayout
+        android:id="@+id/layout_search_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:elevation="4dp"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <EditText
-            android:id="@+id/et_search"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/transparent"
-            android:gravity="center_vertical"
-            android:hint="검색 창"
-            android:paddingHorizontal="15dp"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#E0E0E0"
-            android:textSize="16sp"
-            android:autofillHints="none"
-            android:inputType="text"
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            app:cardBackgroundColor="#7293C1"
+            app:cardCornerRadius="25dp"
+            app:cardElevation="0dp">
 
-            android:drawableEnd="@android:drawable/ic_menu_search"
-            android:drawablePadding="8dp"
-            app:drawableTint="#FFFFFF" />
-    </com.google.android.material.card.MaterialCardView>
+            <EditText
+                android:id="@+id/et_search"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:gravity="center_vertical"
+                android:hint="검색 창"
+                android:paddingHorizontal="15dp"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#E0E0E0"
+                android:textSize="16sp"
+                android:autofillHints="none"
+                android:inputType="text"
 
-    <ImageView
-        android:id="@+id/iv_top_favorite"
-        android:layout_width="35dp"
-        android:layout_height="45dp"
-        android:layout_marginStart="12dp"
-        android:src="@android:drawable/btn_star_big_on"
-        app:tint="#FFD700"
-        android:contentDescription="즐겨찾기 목록 보기"/>
+                android:drawableEnd="@android:drawable/ic_menu_search"
+                android:drawablePadding="8dp"
+                app:drawableTint="#FFFFFF" />
+        </com.google.android.material.card.MaterialCardView>
 
-    <ImageView
-        android:id="@+id/iv_my_location"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:layout_marginStart="8dp"
-        android:src="@android:drawable/ic_menu_mylocation"
-        app:tint="#000000"
-        android:contentDescription="내 위치로 이동"/>
-</LinearLayout>
+        <ImageView
+            android:id="@+id/iv_top_favorite"
+            android:layout_width="35dp"
+            android:layout_height="45dp"
+            android:layout_marginStart="12dp"
+            android:src="@android:drawable/btn_star_big_on"
+            app:tint="#FFD700"
+            android:contentDescription="즐겨찾기 목록 보기"/>
+
+        <ImageView
+            android:id="@+id/iv_my_location"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="8dp"
+            android:src="@android:drawable/ic_menu_mylocation"
+            app:tint="#000000"
+            android:contentDescription="내 위치로 이동"/>
+    </LinearLayout>
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/map"
