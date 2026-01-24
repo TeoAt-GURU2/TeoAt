@@ -97,7 +97,7 @@
                     android:layout_weight="1"
                     android:layout_marginEnd="4dp"
                     android:gravity="center"
-                    android:text="청소년\n정책" />
+                    android:text="청소년\n행사" />
 
                 <Button
                     android:id="@+id/btnFacility"
