@@ -16,6 +16,9 @@ import com.example.teoat.R
 import com.example.teoat.base.BaseActivity
 import com.example.teoat.databinding.ActivityChatbotBinding
 import com.example.teoat.ui.main.MainActivity
+import com.example.teoat.ui.map.FacilityActivity
+import com.example.teoat.ui.map.StoreActivity
+import com.example.teoat.ui.mypage.MyPageActivity
 import kotlinx.coroutines.launch
 
 class ChatbotActivity : BaseActivity() {
@@ -26,7 +29,9 @@ class ChatbotActivity : BaseActivity() {
     private val viewModel : ChatViewModel by viewModels()
 
     // Adapter 생성
-    private val chatAdapter = ChatAdapter()
+    private val chatAdapter = ChatAdapter { command ->
+        handleNavigationCommand(command)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,7 +55,7 @@ class ChatbotActivity : BaseActivity() {
         binding.rvChat.apply {
             adapter = chatAdapter
             layoutManager = LinearLayoutManager(this@ChatbotActivity).apply {
-                stackFromEnd = true // 키보드 올라올 때 리스트가 위로 올라가게 함
+                stackFromEnd = false // 키보드 올라올 때 리스트가 위로 올라가게 함
             }
         }
     }
@@ -83,25 +88,17 @@ class ChatbotActivity : BaseActivity() {
                         }
                     }
                 }
-
-                // 화면 이동 명령 감지 -> Intent 실행
-                launch {
-                    viewModel.navigationEvent.collect { command ->
-                        handleNavigationCommand(command)
-                    }
-                }
             }
         }
     }
 
     private fun handleNavigationCommand(command: String) {
         val intent = when (command) {
-            "CMD_STORE" -> Intent(this, MainActivity::class.java)
-            "CMD_FACILITY" -> Intent(this, MainActivity::class.java)
+            "CMD_STORE" -> Intent(this, StoreActivity::class.java)
+            "CMD_FACILITY" -> Intent(this, FacilityActivity::class.java)
             "CMD_POLICY" -> Intent(this, MainActivity::class.java)
             "CMD_EVENT" -> Intent(this, MainActivity::class.java)
-            "CMD_LOGIN" -> Intent(this, MainActivity::class.java)
-            "CMD_MYPAGE" -> Intent(this, MainActivity::class.java)
+            "CMD_MYPAGE" -> Intent(this, MyPageActivity::class.java)
             else -> null
         }
 

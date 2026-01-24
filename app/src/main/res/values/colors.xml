@@ -9,4 +9,5 @@
     <color name="teoat_primary">#6E8FB6</color>
     <color name="teoat_on_primary">#000000</color>
     <color name="teoat_background">#FFFFFF</color>
+    <color name="table_line">#828282</color>
 </resources>

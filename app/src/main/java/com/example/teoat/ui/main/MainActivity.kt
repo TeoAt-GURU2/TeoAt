@@ -3,6 +3,7 @@ package com.example.teoat.ui.main
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import androidx.core.view.WindowInsetsCompat
@@ -23,8 +24,11 @@ import com.example.teoat.ui.map.StoreActivity
 import com.example.teoat.worker.NotiWorker
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.Date
 import java.util.concurrent.TimeUnit
 
 class MainActivity : BaseActivity() {

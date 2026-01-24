@@ -25,6 +25,11 @@ import androidx.core.app.ActivityCompat
 import com.example.teoat.base.BaseActivity
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import okhttp3.internal.notify
+import retrofit2.Call
+import retrofit2.Response
 
 
 class StoreActivity : BaseActivity(), OnMapReadyCallback {
@@ -40,6 +45,10 @@ class StoreActivity : BaseActivity(), OnMapReadyCallback {
     private var isFavoriteMode = false
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val markerMap = HashMap<String, com.google.android.gms.maps.model.Marker>()
+
+    // Firestore 변수 선언: 로그인 확인 여부, 즐겨찾기 연동을 위함
+    private val auth = FirebaseAuth.getInstance()
+    private val db = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,8 +70,17 @@ class StoreActivity : BaseActivity(), OnMapReadyCallback {
         // 3. 어댑터 설정
         adapter = StoreAdapter(allStores,
             onFavoriteClick = { store ->
-                store.isFavorite = !store.isFavorite
-                applyFilters(etSearch.text.toString())
+                // 로그인 여부 확인
+                val currentUser = auth.currentUser
+                if (currentUser == null ) {
+                    Toast.makeText(this, "로그인이 필요한 기능입니다.", Toast.LENGTH_SHORT).show()
+                    return@StoreAdapter
+                } else {
+                    // DB 업데이트
+                    store.isFavorite = !store.isFavorite
+                    toggleFavoriteInFirestore(currentUser.uid, store)
+                    applyFilters(etSearch.text.toString())
+                }
             },
             onItemClick = { store ->
                 val location = LatLng(store.latitude, store.longitude)
@@ -118,8 +136,13 @@ class StoreActivity : BaseActivity(), OnMapReadyCallback {
 
         // 5. 버튼 클릭 리스너 - 즐겨찾기 버튼
         ivTopFavorite.setOnClickListener {
-            isFavoriteMode = !isFavoriteMode
-            applyFilters(etSearch.text.toString())
+            val currentUSer = auth.currentUser
+            if (currentUSer != null) {
+                isFavoriteMode = !isFavoriteMode
+                applyFilters(etSearch.text.toString())
+            } else {
+                Toast.makeText(this, "로그인이 필요한 기능입니다.", Toast.LENGTH_SHORT).show()
+            }
         }
 
         // 5. 버튼 클릭 리스너 - 내 위치 버튼
@@ -172,16 +195,21 @@ class StoreActivity : BaseActivity(), OnMapReadyCallback {
             .build()
 
         val apiService = retrofit.create(ApiService::class.java)
-
         val myApiKey = BuildConfig.MCS_API_KEY
 
-        // 본인의 API 키를 넣으세요 (샘플 키는 제한이 있을 수 있습니다)
+        // 가맹점 목록 관련 API 호출
         apiService.getStores(key = myApiKey).enqueue(object : retrofit2.Callback<StoreResponse> {
             override fun onResponse(call: retrofit2.Call<StoreResponse>, response: retrofit2.Response<StoreResponse>) {
+                // [디버깅용]
+                android.util.Log.d("API_URI_CHECK", "요청한 주소: ${call.request().url}")
+
                 if (response.isSuccessful) {
+                    // 기존 리스트 초기화
+                    allStores.clear()
+
+                    // API 데이터를 Store 모델로 변환하여 리스트에 추가
                     val items = response.body()?.GDreamCard?.get(1)?.row
                     items?.forEach { item ->
-                        // API 데이터를 우리 Store 모델로 변환
                         allStores.add(Store(
                             id = item.FACLT_NM ?: "",
                             name = item.FACLT_NM ?: "이름 없음",
@@ -190,11 +218,26 @@ class StoreActivity : BaseActivity(), OnMapReadyCallback {
                             longitude = item.REFINE_WGS84_LOGT?.toDoubleOrNull() ?: 127.0
                         ))
                     }
-                    // 데이터를 다 불러왔으면 리스트와 지도 갱신
-                    runOnUiThread {
-                        adapter.notifyDataSetChanged()
-                        addMarkersToMap(allStores)
+
+                    // 데이터를 다 불러온 후, 로그인 상태라면 즐겨찾기 동기화 시작
+                    if (auth.currentUser != null) {
+                        syncFavorites() // Firestore에서 내 즐겨찾기 목록을 불러와 비교
+                    } else {
+                        // 로그인이 되지 않은 상태라면 화면 갱신
+                        refreshUI()
                     }
+
+                    // [디버깅용]
+                    android.util.Log.d("API_TEST", "응답 성공: ${response.body()}")
+
+                    val body = response.body()?.GDreamCard
+
+                    // 데이터 구조가 비어있는지 체크
+                    if (body == null || body.size < 2) {
+                        android.util.Log.e("API_TEST", "데이터가 비어있거나 구조가 다릅니다.")
+                    }
+                } else {
+                    android.util.Log.d("API_TEST", "응답 실패: ${response.code()}")
                 }
             }
 
@@ -202,6 +245,14 @@ class StoreActivity : BaseActivity(), OnMapReadyCallback {
                 Toast.makeText(this@StoreActivity, "데이터를 불러오지 못했습니다.", Toast.LENGTH_SHORT).show()
             }
         })
+    }
+
+    // UI 갱신 로직 분리
+    private fun refreshUI() {
+        runOnUiThread {
+            adapter.notifyDataSetChanged()
+            addMarkersToMap(allStores)
+        }
     }
 
     private fun moveToCurrentLocation() {
@@ -226,5 +277,43 @@ class StoreActivity : BaseActivity(), OnMapReadyCallback {
                 Toast.makeText(this, "현재 위치를 불러올 수 없습니다.", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    // 즐겨찾기 설정 : Firestore에서 저장, 삭제하기 위한 함수
+    private fun toggleFavoriteInFirestore(userId : String, store: Store) {
+        // 가맹점(stores) 컬렉션에 저장
+        val favRef = db.collection("users").document(userId)
+            .collection("favorite_stores").document(store.id)
+
+        if (store.isFavorite) {
+            val data = hashMapOf(
+                "name" to store.name,
+                "address" to store.address,
+                "id" to store.id
+            )
+            favRef.set(data)
+        } else {
+            favRef.delete()
+        }
+    }
+
+    // 내 즐겨찾기 동기화 함수 추가
+    private fun syncFavorites() {
+        val user = auth.currentUser ?: return
+
+        db.collection("users").document(user.uid).collection("favorite_stores")
+            .get()
+            .addOnSuccessListener { documents ->
+                val favoriteIds = documents.map { it.id }
+                allStores.forEach { store ->
+                    if (favoriteIds.contains(store.id)) {
+                        store.isFavorite = true
+                    }
+                }
+                refreshUI()
+            }
+            .addOnFailureListener {
+                refreshUI()
+            }
     }
 }

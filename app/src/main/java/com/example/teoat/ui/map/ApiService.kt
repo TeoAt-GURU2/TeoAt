@@ -10,7 +10,7 @@ interface ApiService {
     fun getStores(
         @Query("KEY") key: String,
         @Query("Type") type: String = "json",
-        @Query("pIndex") index: Int = 2,
+        @Query("pIndex") index: Int = 1,
         @Query("pSize") size: Int = 100
     ): Call<StoreResponse>
 
@@ -19,7 +19,7 @@ interface ApiService {
     fun getFacilities(
         @Query("KEY") key: String,
         @Query("Type") type: String = "json",
-        @Query("pIndex") index: Int = 3,
+        @Query("pIndex") index: Int = 1,
         @Query("pSize") size: Int = 100
     ): Call<FacilityResponse>
 }

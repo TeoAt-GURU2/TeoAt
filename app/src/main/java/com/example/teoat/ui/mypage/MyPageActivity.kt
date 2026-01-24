@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.teoat.base.BaseActivity
 import com.example.teoat.common.SessionManager
 import com.example.teoat.databinding.ActivityMypageLoggedInBinding
 import com.example.teoat.databinding.ActivityMypageLoggedOutBinding
@@ -12,7 +13,7 @@ import com.example.teoat.ui.auth.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
-class MyPageActivity : AppCompatActivity() {
+class MyPageActivity : BaseActivity() {
 
     private lateinit var session: SessionManager
     private lateinit var auth: FirebaseAuth
@@ -31,7 +32,7 @@ class MyPageActivity : AppCompatActivity() {
         // 현재 로그인 상태 확인
         syncSessionWithFirebase()
 
-        // 로그인이 되어 있으면 showLoggedInUi 호출
+        // 로그인이 되어 있으면 UI 표시, 로그인 상태가 아니라면 로그인 화면으로 이동
         if (session.isLoggedIn()) {
             showLoggedInUi()
         } else {
@@ -86,7 +87,7 @@ class MyPageActivity : AppCompatActivity() {
         binding.tvRegion.text = "거주지역: -"
         binding.tvAge.text = "나이: -"
 
-        // 자동으로 한번 로드
+        // 프로필 자동으로 로드
         loadUserProfile(binding, uid, showToastOnSuccess = false)
 
         binding.btnInfo.setOnClickListener {

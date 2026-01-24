@@ -16,11 +16,21 @@ class FacilityAdapter(
 ) : RecyclerView.Adapter<FacilityAdapter.ViewHolder>() {
 
     inner class ViewHolder(val binding: ItemFacilityRowBinding) : RecyclerView.ViewHolder(binding.root) {
-
-
         init {
-            binding.root.setOnClickListener { onItemClick(facilities[adapterPosition]) }
-            binding.ivFacilityStar.setOnClickListener { onFavoriteClick(facilities[adapterPosition]) }
+            // 전체 아이템 클릭
+            binding.root.setOnClickListener {
+                val position = bindingAdapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    onItemClick(facilities[position])
+                }
+            }
+            // 별표 아이콘 클릭
+            binding.ivFacilityStar.setOnClickListener {
+                val position = bindingAdapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    onFavoriteClick(facilities[position])
+                }
+            }
         }
     }
 

@@ -10,15 +10,16 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <View android:layout_width="1dp" android:layout_height="match_parent" android:background="#000000" />
+        <View android:layout_width="1dp" android:layout_height="match_parent" android:background="@color/table_line" />
 
         <ImageView
             android:id="@+id/iv_facility_star"
-            android:layout_width="50dp"
+            android:layout_width="30dp"
             android:layout_height="30dp"
+            android:paddingHorizontal="5dp"
             android:src="@android:drawable/btn_star_big_off" />
 
-        <View android:layout_width="1dp" android:layout_height="match_parent" android:background="#000000" />
+        <View android:layout_width="1dp" android:layout_height="match_parent" android:background="@color/table_line" />
 
         <TextView
             android:id="@+id/tv_facility_name"
@@ -28,12 +29,12 @@
             android:gravity="center"
             android:padding="4dp"
             android:text="시설명"
-            android:textColor="#000000"
+            android:textColor="@color/black"
             android:textSize="13sp"
             android:ellipsize="end"
             android:maxLines="2" />
 
-        <View android:layout_width="1dp" android:layout_height="match_parent" android:background="#000000" />
+        <View android:layout_width="1dp" android:layout_height="match_parent" android:background="@color/table_line" />
 
         <TextView
             android:id="@+id/tv_facility_address"
@@ -43,12 +44,12 @@
             android:gravity="center"
             android:padding="4dp"
             android:text="경기도 OO시..."
-            android:textColor="#000000"
+            android:textColor="@color/black"
             android:textSize="12sp"
             android:ellipsize="end"
             android:maxLines="2" />
 
-        <View android:layout_width="1dp" android:layout_height="match_parent" android:background="#000000" />
+        <View android:layout_width="1dp" android:layout_height="match_parent" android:background="@color/table_line" />
 
         <TextView
             android:id="@+id/tv_facility_phone"
@@ -58,16 +59,16 @@
             android:gravity="center"
             android:padding="4dp"
             android:text="031-000-0000"
-            android:textColor="#000000"
+            android:textColor="@color/black"
             android:textSize="12sp"
             android:ellipsize="end"
             android:maxLines="1" />
 
-        <View android:layout_width="1dp" android:layout_height="match_parent" android:background="#000000" />
+        <View android:layout_width="1dp" android:layout_height="match_parent" android:background="@color/table_line" />
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#000000" />
+        android:background="@color/table_line" />
 </LinearLayout>

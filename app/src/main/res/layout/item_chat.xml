@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:padding="10dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-    
+
     <LinearLayout
         android:id="@+id/layout_bot"
         android:layout_width="wrap_content"
@@ -14,17 +14,9 @@
         android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintWidth_percent="0.7">
-        
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TeoAt Bot"
-            android:textSize="12sp"
-            android:textColor="#666666"
-            android:layout_marginStart="4dp"
-            android:layout_marginBottom="4dp" />
-        
+
         <TextView
             android:id="@+id/tv_bot_msg"
             android:layout_width="wrap_content"
@@ -35,6 +27,18 @@
             android:textSize="16sp"
             android:lineSpacingExtra="4dp"
             tools:text="안녕하세요! 무엇을 도와드릴까요?" />
+        
+        <Button
+            android:id="@+id/btn_action"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:layout_marginTop="8dp"
+            android:text="바로가기"
+            android:textSize="12sp"
+            android:backgroundTint="#6750A4"
+            android:textColor="#FFFFFF"
+            android:visibility="gone"
+            tools:visibility="visible"  />
     </LinearLayout>
     
     <LinearLayout
@@ -45,6 +49,7 @@
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintWidth_percent="0.7"
         android:gravity="end"
         tools:visibility="gone">
