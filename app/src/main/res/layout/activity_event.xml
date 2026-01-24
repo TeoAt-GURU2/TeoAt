@@ -6,14 +6,14 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#FFFFFF"
-    tools:context=".ui.map.FacilityActivity">
-
+    tools:context=".ui.info.EventActivity">
+    
     <LinearLayout
         android:id="@+id/layout_search_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
         android:orientation="horizontal"
+        android:gravity="center_vertical"
         android:padding="8dp"
         android:elevation="4dp">
 
@@ -44,85 +44,63 @@
         </com.google.android.material.card.MaterialCardView>
 
         <ImageView
-            android:id="@+id/iv_top_favorite"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:id="@+id/iv_top_scrap"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/outline_bookmark_24"
+            android:padding="8dp"
             android:layout_marginStart="8dp"
-            android:src="@android:drawable/btn_star_big_on"
-            app:tint="#FFD700"
-            android:contentDescription="즐겨찾기 목록 보기"/>
+            android:contentDescription="스크랩한 행사 보기" />
 
-        <ImageView
-            android:id="@+id/iv_my_location"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_marginStart="8dp"
-            android:src="@android:drawable/ic_menu_mylocation"
-            app:tint="#000000"
-            android:contentDescription="내 위치로 이동"/>
     </LinearLayout>
 
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2"/>
-    
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/table_line"    />
-
+    
     <LinearLayout
         android:id="@+id/table_header"
         android:layout_width="match_parent"
         android:layout_height="45dp"
-        android:background="#FFFFFF"
-        android:orientation="horizontal">
+        android:orientation="horizontal" >
 
         <View android:layout_width="1dp" android:layout_height="match_parent" android:background="@color/table_line" />
-
         <TextView
-            android:layout_width="30dp"
+            android:text="스크랩"
+            android:layout_width="35dp"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:text="★"
-            android:textColor="#000000" />
+            android:textSize="10sp"
+            android:textStyle="bold" />
 
         <View android:layout_width="1dp" android:layout_height="match_parent" android:background="@color/table_line" />
-
         <TextView
+            android:text="제목"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="시설"
-            android:textStyle="bold"
-            android:textColor="#000000" />
+            android:textSize="12sp"
+            android:textStyle="bold" />
 
         <View android:layout_width="1dp" android:layout_height="match_parent" android:background="@color/table_line" />
-
         <TextView
-            android:layout_width="0dp"
+            android:text="주관 기관"
+            android:layout_width="100dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             android:gravity="center"
-            android:text="주소"
-            android:textStyle="bold"
-            android:textColor="#000000" />
+            android:textSize="12sp"
+            android:textStyle="bold" />
 
         <View android:layout_width="1dp" android:layout_height="match_parent" android:background="@color/table_line" />
-
         <TextView
-            android:layout_width="0dp"
+            android:text="헹사일"
+            android:layout_width="50dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             android:gravity="center"
-            android:text="전화번호"
-            android:textStyle="bold"
-            android:textColor="#000000" />
-
+            android:textSize="12sp"
+            android:textStyle="bold" />
         <View android:layout_width="1dp" android:layout_height="match_parent" android:background="@color/table_line" />
     </LinearLayout>
 
@@ -132,11 +110,12 @@
         android:background="@color/table_line"    />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_facility_list"
+        android:id="@+id/rv_event_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:scrollbars="vertical"
         android:background="#FFFFFF"
-        tools:listitem="@layout/item_facility_row" />
+        tools:listitem="@layout/item_event" />
 
 </LinearLayout>

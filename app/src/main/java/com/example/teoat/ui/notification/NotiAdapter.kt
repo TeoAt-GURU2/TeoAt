@@ -9,7 +9,8 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 class NotiAdapter (
-    private val items : List<NotificationModel>
+    private val items : List<NotificationModel>,
+    private val onDeleteClick : (NotificationModel) -> Unit  // 삭제 콜백 추가
 ) : RecyclerView.Adapter<NotiAdapter.NotiViewHolder>() {
 
     inner class NotiViewHolder(private val binding: ItemNotiBinding) : RecyclerView.ViewHolder(binding.root)  {
@@ -20,6 +21,11 @@ class NotiAdapter (
             // 날짜 포맷팅
             val sdf = SimpleDateFormat("MM.dd HH:mm", Locale.getDefault())
             binding.tvDate.text = sdf.format(item.timestamp.toDate())
+
+            // 삭제 버튼 클릭 리스너
+            binding.ivDeleteNoti.setOnClickListener {
+                onDeleteClick(item)
+            }
         }
     }
 

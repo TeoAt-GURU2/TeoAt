@@ -3,31 +3,28 @@ package com.example.teoat.base
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.se.omapi.Session
+import android.util.Log
 import android.view.Menu
 import android.view.View
-import android.widget.FrameLayout
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.teoat.R
 import com.example.teoat.common.SessionManager
 import com.example.teoat.data.model.NotificationModel
 import com.example.teoat.databinding.ActivityBaseBinding
 import com.example.teoat.ui.chatbot.ChatbotActivity
+import com.example.teoat.ui.info.EventActivity
 import com.example.teoat.ui.main.MainActivity
 import com.example.teoat.ui.map.FacilityActivity
 import com.example.teoat.ui.map.StoreActivity
 import com.example.teoat.ui.mypage.MyPageActivity
 import com.example.teoat.ui.notification.NotiAdapter
-import com.google.firebase.ai.type.content
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
 
 open class BaseActivity : AppCompatActivity() {
@@ -38,8 +35,14 @@ open class BaseActivity : AppCompatActivity() {
     private val notiList = mutableListOf<NotificationModel>()
     private lateinit var notiAdapter: NotiAdapter
 
+    // 리스너 관리를 위한 변수
+    private var notiListener: ListenerRegistration? = null
+
     // BaseActivity용 바인딩 객체 선언
     protected lateinit var baseBinding : ActivityBaseBinding
+
+    // 알림 뱃지 뷰 참조를 위한 변수
+    private var badgeView: View? = null
 
     override fun setContentView(layoutResID: Int) {
         baseBinding = ActivityBaseBinding.inflate(layoutInflater)
@@ -67,6 +70,9 @@ open class BaseActivity : AppCompatActivity() {
 
         initToolbar()
         initNotificationUI()
+
+        // 읽지 않은 알림들 확인하기 (뱃지 표시용)
+        checkUnreadNotifications()
     }
 
     private fun initToolbar() {
@@ -90,10 +96,20 @@ open class BaseActivity : AppCompatActivity() {
             // 마이페이지 버튼
             ivToolbarMypage.setOnClickListener { startActivity(Intent(this@BaseActivity, MyPageActivity::class.java)) }
 
-            // 알림창 버튼
-            ivToolbarNotice.setOnClickListener { openNotificationPannel() }
-        }
+            // 뱃지 뷰 찾기
+            badgeView = findViewById(R.id.view_noti_badge)
 
+            // 알림창 버튼
+            ivToolbarNotice.setOnClickListener {
+                // 알림창 열리면 뱃지 안 보이게 수정
+                badgeView?.visibility = View.GONE
+                openNotificationPanel()
+            }
+        }
+        setUpNavigationDrawer()
+    }
+
+    private fun setUpNavigationDrawer() {
         // 네비게이션 드로어 메뉴 헤더 디자인 적용하기
         val menu = baseBinding.navigationView.menu
 
@@ -118,7 +134,7 @@ open class BaseActivity : AppCompatActivity() {
                 R.id.nav_store -> { startActivity(Intent(this, StoreActivity::class.java)) }
                 R.id.nav_facility -> { startActivity(Intent(this, FacilityActivity::class.java)) }
                 R.id.nav_policy -> { startActivity(Intent(this, MainActivity::class.java)) }
-                R.id.nav_event -> { startActivity(Intent(this, MainActivity::class.java)) }
+                R.id.nav_event -> { startActivity(Intent(this, EventActivity::class.java)) }
                 R.id.nav_chatbot -> { startActivity(Intent(this, ChatbotActivity::class.java)) }
             }
             baseBinding.drawerLayout.closeDrawer(GravityCompat.END)
@@ -127,19 +143,42 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     private fun initNotificationUI() {
-        notiAdapter = NotiAdapter(notiList)
+        notiAdapter = NotiAdapter(notiList) { notification ->
+            deleteNotification(notification)
+        }
         baseBinding.rvNotificationList.layoutManager = LinearLayoutManager(this)
         baseBinding.rvNotificationList.adapter = notiAdapter
 
-        // 닫기 버튼
-        baseBinding.btnCloseNoti.setOnClickListener { baseBinding.flNotificationContainer.visibility = View.GONE }
+        // 닫기 버튼을 누르면 리스너 해제 후 창 닫기
+        baseBinding.btnCloseNoti.setOnClickListener { closeNotificationPanel() }
 
-        // 오버레이 바깥쪽 클릭 시에 닫기
-        baseBinding.flNotificationContainer.setOnClickListener { baseBinding.flNotificationContainer.visibility = View.GONE }
+        // 오버레이 바깥쪽 클릭 시에 닫기, 마찬가지로 리스너 해제 후 창 닫기
+        baseBinding.flNotificationContainer.setOnClickListener { closeNotificationPanel() }
+    }
+
+    // 알림 삭제를 위한 함수
+    private fun deleteNotification(notification: NotificationModel) {
+        val uid = session.getUserId() ?: return
+
+        // notification.id가 문서 ID라고 가정 (NotificationModel에 id 필드 확인 필요)
+        // 만약 id가 비어있다면 문서 로드 시 id를 넣어주는 로직이 필요함
+        if (notification.id.isEmpty()) return
+
+        db.collection("users").document(uid)
+            .collection("notifications").document(notification.id)
+            .delete()
+            .addOnSuccessListener {
+                Toast.makeText(this, "알림이 삭제되었습니다.", Toast.LENGTH_SHORT).show()
+                // 삭제 후 뱃지 상태 재확인
+                checkUnreadNotifications()
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "삭제 실패", Toast.LENGTH_SHORT).show()
+            }
     }
 
     // 알림 데이터 불러오기 및 창 열기
-    private fun openNotificationPannel() {
+    private fun openNotificationPanel() {
         if (!session.isLoggedIn()) {
             Toast.makeText(this, "로그인이 필요한 기능입니다.", Toast.LENGTH_SHORT).show()
             return
@@ -150,22 +189,62 @@ open class BaseActivity : AppCompatActivity() {
 
         val uid = session.getUserId() ?: return
 
-        // Firestore 조회
+        // 기존 리스너가 있다면 제거
+        notiListener?.remove()
+
+        // 실시간 리스너 연결
+        notiListener = db.collection("users").document(uid)
+            .collection("notifications")
+            .whereLessThanOrEqualTo("timestamp", Timestamp.now())
+            .orderBy("timestamp", Query.Direction.DESCENDING)
+            .addSnapshotListener { snapshots, e ->
+                if (e != null) {
+                    Log.w("BaseActivity", "Listen failed", e)
+                    return@addSnapshotListener
+                }
+
+                if (snapshots != null) {
+                    notiList.clear()
+                    for (doc in snapshots) {
+                        val noti = doc.toObject(NotificationModel::class.java).copy(id = doc.id)
+                        notiList.add(noti)
+                    }
+                    notiAdapter.notifyDataSetChanged()
+                }
+            }
+    }
+
+    // 알림 창 닫기
+    private fun closeNotificationPanel() {
+        baseBinding.flNotificationContainer.visibility = View.GONE
+        // 패널을 닫으면 실시간 리스너 해제
+        notiListener?.remove()
+        notiListener = null
+    }
+
+    // 알림 뱃지 상태 체크
+    private fun checkUnreadNotifications() {
+        val uid = session.getUserId() ?: return
+
+        // 단순히 문서가 존재하는지만 체크하여 뱃지 표시
         db.collection("users").document(uid)
             .collection("notifications")
-            .orderBy("timestamp", Query.Direction.DESCENDING)
-            .get()
-            .addOnSuccessListener { result ->
-                notiList.clear()
-                for (doc in result) {
-                    val noti = doc.toObject(NotificationModel::class.java)
-                    notiList.add(noti)
+            .whereLessThanOrEqualTo("timestamp", Timestamp.now())
+            .whereEqualTo("isRead", false)
+            .addSnapshotListener { snapshots, e ->
+                if (e != null) {
+                    Log.e("BaseActivity", "Badge Listen failed (Index needed?)", e)
+                    return@addSnapshotListener
                 }
-                notiAdapter.notifyDataSetChanged()
+
+                // 알림창이 열려 있지 않을 때만 뱃지 표시
+                if (snapshots != null && !snapshots.isEmpty) {
+                    badgeView?.visibility = View.VISIBLE
+                } else {
+                    badgeView?.visibility = View.GONE
+                }
             }
-            .addOnFailureListener {
-                Toast.makeText(this, "알림 목록을 불러오지 못했습니다.", Toast.LENGTH_SHORT).show()
-            }
+
     }
 
     private fun setHeaderTitle(menu: Menu, itemId: Int,title: String) {

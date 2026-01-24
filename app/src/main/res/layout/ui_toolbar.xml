@@ -53,6 +53,17 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             android:contentDescription="알림"     />
+        
+        <View
+            android:id="@+id/view_noti_badge"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:background="#FF0000"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@id/iv_toolbar_notice"
+            app:layout_constraintTop_toTopOf="@id/iv_toolbar_notice"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="2dp"  />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.appcompat.widget.Toolbar>

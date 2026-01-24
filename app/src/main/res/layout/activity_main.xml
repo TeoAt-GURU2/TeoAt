@@ -97,7 +97,7 @@
                     android:layout_weight="1"
                     android:layout_marginEnd="4dp"
                     android:gravity="center"
-                    android:text="청소년 정책\n찾기" />
+                    android:text="청소년\n정책" />
 
                 <Button
                     android:id="@+id/btnFacility"
@@ -107,7 +107,7 @@
                     android:layout_weight="1"
                     android:layout_marginHorizontal="4dp"
                     android:gravity="center"
-                    android:text="복지 시설\n찾기" />
+                    android:text="복지 시설\n찾아보기" />
 
                 <Button
                     android:id="@+id/btnCalendar"
@@ -117,7 +117,7 @@
                     android:layout_weight="1"
                     android:layout_marginStart="4dp"
                     android:gravity="center"
-                    android:text="내 정책·행사\n일정 보기" />
+                    android:text="스크랩한\n행사" />
 
             </LinearLayout>
 

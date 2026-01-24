@@ -40,8 +40,7 @@ class StoreActivity : BaseActivity(), OnMapReadyCallback {
     //전체 데이터 원본 (API에서 받아 온 모든 데이터)
     private var allStores = mutableListOf<Store>()
 
-    //현재 지도 화면에 보이는 데이터 (지도 이동 시에 갱신됨)
-    private var currentVisibleStores = mutableListOf<Store>()
+
     private var isFavoriteMode = false
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val markerMap = HashMap<String, com.google.android.gms.maps.model.Marker>()
