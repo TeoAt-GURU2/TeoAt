@@ -9,25 +9,38 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.teoat.data.model.ChatMessage
 import com.example.teoat.databinding.ItemChatBinding
 
-class ChatAdapter : ListAdapter<ChatMessage, ChatAdapter.ChatViewHolder>(DiffCallback) {
-    class ChatViewHolder(private val binding: ItemChatBinding)
+class ChatAdapter(
+    private val onActionClick: (String) -> Unit
+) : ListAdapter<ChatMessage, ChatAdapter.ChatViewHolder>(DiffCallback) {
+
+    inner class ChatViewHolder(private val binding: ItemChatBinding)
         : RecyclerView.ViewHolder(binding.root) {
         fun bind(message: ChatMessage) {
             if (message.isUser) {
-                // 사용자가 보낸 메세지 : 오른쪽에 보이기, 왼쪽 숨기기
+                // 사용자가 보낸 메세지
                 binding.layoutUser.visibility = View.VISIBLE
                 binding.layoutBot.visibility = View.GONE
                 binding.tvUserMsg.text = message.text
             } else {
-                // AI가 보낸 메세지 : 왼쪽에 보이기, 오른쪽 숨기기
+                // AI가 보낸 메세지
                 binding.layoutBot.visibility = View.VISIBLE
                 binding.layoutUser.visibility = View.GONE
 
                 // 로딩 중이면 "..." 표시하고, 아니면 텍스트 표시하기
                 if (message.isPending) {
                     binding.tvBotMsg.text = "..."
+                    binding.btnAction.visibility = View.GONE
                 } else {
                     binding.tvBotMsg.text = message.text
+
+                    if (message.action != null) {
+                        binding.btnAction.visibility = View.VISIBLE
+                        binding.btnAction.setOnClickListener {
+                            onActionClick(message.action)
+                        }
+                    } else {
+                        binding.btnAction.visibility = View.GONE
+                    }
                 }
             }
         }

@@ -16,12 +16,17 @@ import kotlinx.coroutines.launch
 
 class ChatViewModel : ViewModel() {
     // 화면에 보여줄 채팅 목록 (항상 빈 리스트로 시작하도록 함)
-    private val _chatUiState = MutableStateFlow<List<ChatMessage>>(emptyList())
+    private val _chatUiState = MutableStateFlow<List<ChatMessage>>(
+        listOf(
+            ChatMessage(
+                text = "안녕하세요! 경기도 청소년 지원포털 터앗입니다.\n" + "무엇을 도와드릴까요?",
+                isUser = false,
+                isPending = false
+            )
+        )
+    )
     val chatUiState : StateFlow<List<ChatMessage>> = _chatUiState.asStateFlow()
 
-    // 네비게이션 이벤트 (화면 이동 명령용)
-    private val _navigationEvent = MutableStateFlow<String>("")
-    val navigationEvent: SharedFlow<String> = _navigationEvent.asSharedFlow()
 
     // Gemini 모델 초기화
     private val generativeModel = Firebase.ai.generativeModel(
@@ -37,7 +42,6 @@ class ChatViewModel : ViewModel() {
                 - 복지시설 -> CMD_FACILITY
                 - 정책 정보 -> CMD_POLICY
                 - 행사 정보 -> CMD_EVENT
-                - 로그인 -> CMD_LOGIN
                 - 마이페이지 -> CMD_MYPAGE
             """.trimIndent())
         }
@@ -61,11 +65,16 @@ class ChatViewModel : ViewModel() {
 
                 removeMessage(loadingId) // 로딩 메세지 제거
 
-                if (reply.startsWith("CMD_")) {
-                    _navigationEvent.emit(reply)
-                    addMessage("이동합니다", false)
+                val command = parseCommand(reply)
+
+                if (command != null) {
+                    // 명령어가 있으면 버튼이 달린 메세지 추가
+                    val cleanText = reply.replace(command, "").trim()
+                    val displayMsg = if(cleanText.isBlank()) "찾으시는 정보에 대한 페이지로 이동할게요." else cleanText
+
+                    addMessage(displayMsg, isUser = false, action = command)
                 } else {
-                    addMessage(reply, false)
+                    addMessage(reply, isUser = false)
                 }
             } catch (e: Exception) {
                 addMessage("오류: ${e.message}", false)
@@ -74,9 +83,14 @@ class ChatViewModel : ViewModel() {
         }
     }
 
+    private fun parseCommand(text: String): String? {
+        val commands = listOf("CMD_STORE", "CMD_FACILITY", "CMD_POLICY", "CMD_EVENT", "CMD_MYPAGE")
+        return commands.find { text.contains(it) }
+    }
+
     // 헬퍼 함수 : 메시지 추가
-    private fun addMessage(text: String, isUser: Boolean, isPending: Boolean = false): String {
-        val msg = ChatMessage(text = text, isUser = isUser, isPending = isPending)
+    private fun addMessage(text: String, isUser: Boolean, isPending: Boolean = false, action: String? = null): String {
+        val msg = ChatMessage(text = text, isUser = isUser, isPending = isPending, action = action)
         val currentList = _chatUiState.value.toMutableList()
         currentList.add(msg)
         _chatUiState.value = currentList

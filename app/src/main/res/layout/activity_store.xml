@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#FFFFFF"
+    tools:context=".ui.map.StoreActivity">
+
+    <LinearLayout
+        android:id="@+id/layout_search_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:elevation="4dp">
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            app:cardBackgroundColor="#7293C1"
+            app:cardCornerRadius="25dp"
+            app:cardElevation="0dp">
+
+            <EditText
+                android:id="@+id/et_search"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:gravity="center_vertical"
+                android:hint="검색 창"
+                android:paddingHorizontal="15dp"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#E0E0E0"
+                android:textSize="12sp"
+                android:autofillHints="none"
+                android:inputType="text"
+                android:drawableEnd="@android:drawable/ic_menu_search"
+                android:drawablePadding="8dp"
+                app:drawableTint="#FFFFFF" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <ImageView
+            android:id="@+id/iv_top_favorite"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginStart="8dp"
+            android:src="@android:drawable/btn_star_big_on"
+            app:tint="#FFD700"
+            android:contentDescription="즐겨찾기 목록 보기"/>
+
+        <ImageView
+            android:id="@+id/iv_my_location"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginStart="8dp"
+            android:src="@android:drawable/ic_menu_mylocation"
+            app:tint="#000000"
+            android:contentDescription="내 위치로 이동"/>
+    </LinearLayout>
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/table_line"    />
+
+    <LinearLayout
+        android:id="@+id/table_header"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="#FFFFFF"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="★"
+            android:textColor="#000000" />
+
+        <View android:layout_width="1dp" android:layout_height="match_parent" android:background="@color/table_line" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="가맹점"
+            android:textStyle="bold"
+            android:textColor="#000000" />
+
+        <View android:layout_width="1dp" android:layout_height="match_parent" android:background="@color/table_line" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.5"
+            android:gravity="center"
+            android:text="주소"
+            android:textStyle="bold"
+            android:textColor="#000000" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/black"    />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_store_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#FFFFFF"
+        tools:listitem="@layout/item_facility_row" />
+
+</LinearLayout>
