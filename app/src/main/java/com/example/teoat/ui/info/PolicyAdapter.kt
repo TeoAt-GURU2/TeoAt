@@ -32,21 +32,20 @@ class PolicyAdapter(
         val item = policies[position]
 
         with(holder.binding) {
-            // 1. 사업명 (TITLE)
+            // 1. 사업명  
             tvPolTitle.text = item.TITLE ?: "제목 없음"
 
-            // 2. 주요 목적 및 내용 (MAIN_PURPS)
+            // 2. 주요 목적 및 내용  
             tvPolDescrpt.text = item.MAIN_PURPS ?: "내용 정보가 없습니다."
 
-            // 3. 운영주체 및 조직 (OPERT_MAINBD_NM + OPERT_ORGNZT_NM)
-            // 예: "운영주체: 경기도 청소년과"
+            // 3. 운영주체 및 조직 
             val mainBody = item.OPERT_MAINBD_NM ?: ""
             val orgName = item.OPERT_ORGNZT_NM ?: ""
-            // 둘 다 비어있으면 "-" 표시, 아니면 공백으로 구분하여 나열
+            // 둘 다 비어있으면 "-" 표시, 또는 공백으로 구분하여 나열
             val operationInfo = if (mainBody.isBlank() && orgName.isBlank()) "-" else "$mainBody $orgName".trim()
             tvPolOprt.text = "운영주체: $operationInfo"
 
-            // 4. 문의처 (GUID)
+            // 4. 문의처  
             tvPolContact.text = "문의처: ${item.GUID ?: "-"}"
         }
     }
