@@ -2,67 +2,51 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@drawable/shape_rect_white_radius_10"
+    android:layout_marginBottom="8dp">
+
+    <TextView
+        android:id="@+id/tv_event_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="행사 제목"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/tv_event_host"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="주최: 경기도청"
+        android:textSize="14sp"
+        android:layout_marginTop="4dp"
+        android:textColor="#666666" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginTop="8dp">
 
-        <View android:layout_width="1dp" android:layout_height="match_parent" android:background="@color/table_line" />
-        <ImageView
-            android:id="@+id/iv_event_scrap"
-            android:layout_width="35dp"
-            android:layout_height="40dp"
-            android:paddingHorizontal="5dp"
-            android:layout_gravity="center"
-            android:src="@drawable/outline_bookmark_24" />
-
-        <View android:layout_width="1dp" android:layout_height="match_parent" android:background="@color/table_line" />
-        <TextView
-            android:id="@+id/tv_event_title"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:padding="4dp"
-            android:text="행사 제목"
-            android:textColor="@color/black"
-            android:textSize="12sp"
-            android:ellipsize="end"
-            android:maxLines="2"    />
-
-        <View android:layout_width="1dp" android:layout_height="match_parent" android:background="@color/table_line" />
-        <TextView
-            android:id="@+id/tv_event_host"
-            android:layout_width="100dp"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:padding="4dp"
-            android:text="주관 기관명"
-            android:textColor="@color/black"
-            android:textSize="12sp"
-            android:ellipsize="end"
-            android:maxLines="1"    />
-
-        <View android:layout_width="1dp" android:layout_height="match_parent" android:background="@color/table_line" />
         <TextView
             android:id="@+id/tv_event_date"
-            android:layout_width="50dp"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:padding="4dp"
-            android:text="일자"
-            android:textColor="@color/black"
-            android:textSize="12sp"
-            android:ellipsize="end"
-            android:maxLines="1"    />
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="2024.01.01"
+            android:textSize="14sp"
+            android:textColor="#888888" />
 
-        <View android:layout_width="1dp" android:layout_height="match_parent" android:background="@color/table_line" />
+        <ImageView
+            android:id="@+id/iv_event_scrap"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/outline_bookmark_24"
+            android:contentDescription="스크랩" />
     </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/table_line" />
 </LinearLayout>

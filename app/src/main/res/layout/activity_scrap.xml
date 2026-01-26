@@ -26,7 +26,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="청소년 행사"
+            android:text="스크랩한 행사"
             android:textSize="18sp"
             android:textStyle="bold"
             android:textColor="#000000"
@@ -37,26 +37,11 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <com.prolificinteractive.materialcalendarview.MaterialCalendarView
-        android:id="@+id/calendarView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        app:mcv_showOtherDates="all"
-        app:mcv_selectionColor="#0000FF"
-        app:mcv_headerTextAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#EEEEEE"/>
-
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_event_list"
+        android:id="@+id/rv_scrap_list"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="match_parent"
         android:padding="16dp"
-        android:clipToPadding="false" />
+        android:clipToPadding="false"/>
 
 </LinearLayout>

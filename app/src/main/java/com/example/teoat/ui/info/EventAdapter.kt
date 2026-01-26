@@ -20,7 +20,6 @@ class EventAdapter(
         val host: TextView = view.findViewById(R.id.tv_event_host)
         val date : TextView = view.findViewById(R.id.tv_event_date)
         val imgScrap : ImageView = view.findViewById(R.id.iv_event_scrap)
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -34,18 +33,19 @@ class EventAdapter(
         holder.title.text = event.title
         holder.host.text = event.host
 
-        if (event.endDate != null) {
+        // 👇 [수정됨] endDate 대신 startDate(시작일)를 보여주도록 변경
+        if (event.startDate != null) {
             val sdf = SimpleDateFormat("MM.dd", Locale.KOREA)
-            holder.date.text = sdf.format(event.endDate.toDate())
+            // Timestamp 타입이므로 .toDate()를 붙여서 Date 객체로 변환해야 합니다.
+            holder.date.text = sdf.format(event.startDate.toDate())
         } else {
             holder.date.text = "-"
         }
 
-        // 스크랩 상태에 따른 아이콘 변경
+        // 스크랩 상태 아이콘 설정
         val iconRes = if (event.isScrapped) R.drawable.baseline_bookmark_24 else R.drawable.outline_bookmark_24
         holder.imgScrap.setImageResource(iconRes)
 
-        // 아이콘 클릭 이벤트
         holder.imgScrap.setOnClickListener {
             onScrapClick(event)
         }
@@ -53,9 +53,9 @@ class EventAdapter(
 
     override fun getItemCount() = events.size
 
-    fun updateData(newEvents: List<Event>) {
-        this.events = newEvents
-        notifyDataSetChanged()
-    }
-
+    // (선택 사항) 데이터 갱신용 함수가 필요하면 사용
+    // fun updateData(newEvents: List<Event>) {
+    //     this.events = newEvents
+    //     notifyDataSetChanged()
+    // }
 }

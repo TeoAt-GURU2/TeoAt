@@ -16,12 +16,17 @@ class GoogleEventAdapter2(
 ) : RecyclerView.Adapter<GoogleEventAdapter2.VH>() {
 
     class VH(v: View) : RecyclerView.ViewHolder(v) {
-        val title: TextView = v.findViewById(R.id.item_event_title)
-        val time: TextView = v.findViewById(R.id.item_event_time)
-        val location: TextView = v.findViewById(R.id.item_event_location)
+        // ✅ 수정됨: item_event.xml에 있는 실제 ID로 변경
+        val title: TextView = v.findViewById(R.id.tv_event_title)
+        val time: TextView = v.findViewById(R.id.tv_event_date)
+
+        // item_event.xml에는 location 전용 뷰가 없으므로,
+        // 일단 'host'(주최자) 자리에 location을 표시하도록 연결합니다.
+        val location: TextView = v.findViewById(R.id.tv_event_host)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
+        // 여기서 item_event 레이아웃을 사용하고 있음
         val v = LayoutInflater.from(parent.context).inflate(R.layout.item_event, parent, false)
         return VH(v)
     }

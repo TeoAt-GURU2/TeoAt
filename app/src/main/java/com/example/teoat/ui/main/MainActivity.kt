@@ -7,7 +7,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
@@ -20,6 +19,7 @@ import com.example.teoat.base.BaseActivity
 import com.example.teoat.databinding.ActivityMainBinding
 import com.example.teoat.ui.chatbot.ChatbotActivity
 import com.example.teoat.ui.info.EventActivity
+import com.example.teoat.ui.info.ScrapActivity // 👈 [추가됨] 스크랩 화면 Import
 import com.example.teoat.ui.main.adapter.BannerAdapter
 import com.example.teoat.ui.main.adapter.BannerItem
 import com.example.teoat.ui.map.FacilityActivity
@@ -70,7 +70,6 @@ class MainActivity : BaseActivity() {
 
         // 버튼 리스너 분리
         setUpButtons()
-
     }
 
     // 알림 권한 확인 함수
@@ -119,9 +118,10 @@ class MainActivity : BaseActivity() {
             startActivity(intent)
         }
 
-        // "캘린더 보기" 버튼 클릭 리스너
+        // "스크랩한 행사" (ID가 btnCalendar인 버튼) 클릭 리스너
+        // 👇 [수정됨] MainActivity -> ScrapActivity 로 변경!
         binding.btnCalendar.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, ScrapActivity::class.java)
             startActivity(intent)
         }
 
@@ -194,12 +194,12 @@ class MainActivity : BaseActivity() {
         // 작업 예약
         WorkManager.getInstance(this).enqueueUniquePeriodicWork(
             "DailyEventCheck",
-            ExistingPeriodicWorkPolicy.UPDATE,    // 이미 예약되어 있다면 유지 (중복 실행 방지)
+            ExistingPeriodicWorkPolicy.UPDATE,
             workRequest
         )
 
         // 안내용 토스트 (선택 사항)
-        Toast.makeText(this, "매일 $NOTI_HOUR:$NOTI_MINUTE 에 알림을 확인합니다.", Toast.LENGTH_SHORT).show()
+        // Toast.makeText(this, "매일 $NOTI_HOUR:$NOTI_MINUTE 에 알림을 확인합니다.", Toast.LENGTH_SHORT).show()
     }
 
     private fun calculateInitialDelay(targetHour: Int, targetMinute: Int): Long {
@@ -211,9 +211,9 @@ class MainActivity : BaseActivity() {
         targetTime.set(Calendar.SECOND, 0)
         targetTime.set(Calendar.MILLISECOND, 0)
 
-        // 만약 목표 시간이 지났다면 세 시간 뒤에 알리기
+        // 만약 목표 시간이 지났다면 내일로 설정
         if (targetTime.before(currentTime)) {
-            targetTime.add(Calendar.HOUR_OF_DAY, 3)
+            targetTime.add(Calendar.DAY_OF_MONTH, 1)
         }
 
         return targetTime.timeInMillis - currentTime.timeInMillis

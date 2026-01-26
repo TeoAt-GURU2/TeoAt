@@ -6,16 +6,21 @@ import com.google.firebase.firestore.IgnoreExtraProperties
 
 @IgnoreExtraProperties
 data class Event(
+    // id는 DB 필드엔 없지만, 문서 ID를 저장하기 위해 남겨둠 (Exclude 유지)
+    @get:Exclude @set:Exclude
     var id: String = "",
+
     val title: String = "",
     val description: String = "",
-    val host: String = "",         // 'agency' 대신 'host' 사용
+    val host: String = "",
     val location: String = "",
-    val region: Long = 0L,          // 지역 코드 (숫자)
-    val target: String = "",       // 대상 (예: "초등 1, 2학년")
-    val startDate: Timestamp? = null, // 등록 시작일 (타임스탬프)
+    val region: Long = 0L,
+    val target: String = "",
+
+    // 👇 파이어베이스의 'startDate', 'endDate' (Timestamp 타입)와 이름 일치!
+    val startDate: Timestamp? = null,
     val endDate: Timestamp? = null,
 
-    @get:Exclude @set:Exclude
+    // 👇 [수정] @Exclude 제거! (DB에 있는 값을 읽어와야 하므로)
     var isScrapped: Boolean = false
 )

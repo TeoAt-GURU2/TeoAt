@@ -18,17 +18,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TeoAt">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${MAPS_API_KEY}" />
+
         <activity
             android:name=".ui.info.PolicyActivity"
             android:exported="false" />
         <activity
             android:name=".ui.info.EventActivity"
             android:exported="false" />
-
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="${MAPS_API_KEY}" />
-
         <activity
             android:name=".ui.auth.JoinActivity"
             android:exported="false" />
@@ -57,12 +57,18 @@
             android:name=".ui.chatbot.ChatbotActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".ui.calendar.CalendarActivity"
+            android:exported="false" />
+
+        <activity android:name=".ui.info.ScrapActivity" />
+
         <activity
             android:name=".ui.main.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
