@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class ChatViewModel : ViewModel() {
-    // 화면에 보여줄 채팅 목록 (항상 빈 리스트로 시작하도록 함)
+    // 화면에 보여줄 채팅 목록 (항상 빈 리스트로 시작)
     private val _chatUiState = MutableStateFlow<List<ChatMessage>>(
         listOf(
             ChatMessage(
@@ -47,7 +47,7 @@ class ChatViewModel : ViewModel() {
         }
     )
 
-    // 대화 세션 시작 (ViewModel이 생성될 때마다 새로 시작 == 화면 나갔다가 들어오면 새 Chat이 시작됨)
+    // 대화 세션 시작 (ViewModel이 생성될 때마다 새로 시작 == 화면 나갔다가 들어오면 새 Chat 시작)
     private val chat = generativeModel.startChat()
 
     // 메세지 전송 로직
