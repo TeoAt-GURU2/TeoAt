@@ -55,7 +55,7 @@ class ChatAdapter(
         holder.bind(getItem(position))
     }
 
-    // 리스트 갱신 시에 변경된 부분만 효율적으로 찾음
+   
     companion object DiffCallback : DiffUtil.ItemCallback<ChatMessage>() {
         override fun areItemsTheSame(oldItem: ChatMessage, newItem: ChatMessage): Boolean {
             return oldItem.id == newItem.id
