@@ -88,7 +88,7 @@ class StoreActivity : BaseActivity(), OnMapReadyCallback {
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 16f))
 
                 // 2. 해당 위치의 마커를 찾아서 정보창(이름) 띄우기
-                // 기존에 추가된 마커들 중에서 좌표가 일치하는 마커를 찾아 정보를 표시합니다.
+                // 기존에 추가된 마커들 중에서 좌표가 일치하는 마커를 찾아 정보를 표시 
                 val marker = markerMap[store.id] // 마커를 관리하는 Map이 필요합니다.
                 marker?.showInfoWindow()
             }
