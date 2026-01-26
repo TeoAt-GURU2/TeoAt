@@ -30,7 +30,7 @@ class EventActivity : BaseActivity() {
 
     // 전체 데이터와 현재 화면에 보여줄 데이터를 분리하여 관리
     private val allEventList = mutableListOf<Event>()
-    private val scrappedEventIds = mutableSetOf<String>() // 내가 스크랩한 행사 ID 목록
+    private val scrappedEventIds = mutableSetOf<String>() // 유저가 스크랩한 행사 ID 목록
 
     private lateinit var adapter: EventAdapter
     private lateinit var ivTopScrap: ImageView
