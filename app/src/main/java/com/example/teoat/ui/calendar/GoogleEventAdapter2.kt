@@ -48,7 +48,7 @@ class GoogleEventAdapter2(
         // 종일 일정
         if (dt == null && d != null) return "$d (종일)"
 
-        // 시간 일정 (RFC3339)
+        // 시간 일정  
         if (dt != null) {
             val millis = parseRfc3339ToMillis(dt) ?: return dt
             val out = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.KOREA)

@@ -6,7 +6,7 @@ import retrofit2.http.Query
 
 interface CalendarApi {
 
-    // GET https://www.googleapis.com/calendar/v3/calendars/{calendarId}/events?...&key=API_KEY
+   
     @GET("calendar/v3/calendars/0be8deb01781b00a97bace95281bfc4eb7bed1d674606f2ca58899b25c2f687f@group.calendar.google.com/events")
     suspend fun listEvents(
         @Path("calendarId") calendarId: String,

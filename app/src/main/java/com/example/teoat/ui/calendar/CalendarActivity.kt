@@ -28,10 +28,8 @@ class CalendarActivity : AppCompatActivity() {
     private lateinit var calendarView: MaterialCalendarView
     private lateinit var googleEventRecycler: RecyclerView
 
-    // ↓↓↓ 여기에 너가 적어둔 값 넣으면 됨 (깃에 올리지 마라)
     private val apiKey: String = "AIzaSyDN7HqwCmgn24QhIeeZa7UFb5ctfnKmDuA"
     private val calendarId: String = "0be8deb01781b00a97bace95281bfc4eb7bed1d674606f2ca58899b25c2f687f@group.calendar.google.com"
-    // ↑↑↑
 
     private var allEvents: List<CalendarEventItem> = emptyList()
     private var lastLoadedMonthKey: String? = null
@@ -71,7 +69,7 @@ class CalendarActivity : AppCompatActivity() {
         // 초기 로드
         loadCurrentMonth()
 
-        // Firestore 배너 (너 기존 코드 유지)
+        // Firestore 배너
         loadTodayFirestoreEvents()
     }
 
@@ -80,10 +78,7 @@ class CalendarActivity : AppCompatActivity() {
         loadGoogleEventsForMonth(cur.year, cur.month)
     }
 
-    /**
-     * month1Based: 1~12 기준으로 받는다.
-     * (repo.fetchMonth가 0-based를 원하면 내부에서 -1 해서 호출)
-     */
+
     private fun loadGoogleEventsForMonth(year: Int, month1Based: Int) {
         val key = "%04d-%02d".format(year, month1Based)
         if (lastLoadedMonthKey == key) {
@@ -94,7 +89,6 @@ class CalendarActivity : AppCompatActivity() {
 
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                // repo.fetchMonth가 기존에 month0Based를 받는 구조였으니 -1 해서 넘김
                 val events = repo.fetchMonth(year, month1Based - 1)
                 allEvents = events
 
@@ -115,8 +109,6 @@ class CalendarActivity : AppCompatActivity() {
     private fun showEventsForDay(day: CalendarDay) {
         val filtered = allEvents.filter { eventToCalendarDay(it) == day }
 
-        // ✅ 여기서 어떤 어댑터를 쓸지 "하나만" 고정해야 함.
-        // 너 프로젝트에 GoogleEventAdapter2가 이미 있으니 그걸 계속 쓸게.
         googleEventRecycler.adapter = GoogleEventAdapter2(filtered)
     }
 
@@ -155,7 +147,7 @@ class CalendarActivity : AppCompatActivity() {
             }
 
             if (!dateOnly.isNullOrBlank()) {
-                // 종일 일정은 로컬(서울) 날짜로 처리
+                // 종일 일정은 로컬 날짜로 처리
                 val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
                 sdf.timeZone = TimeZone.getTimeZone("Asia/Seoul")
                 return sdf.parse(dateOnly)?.time
@@ -170,7 +162,6 @@ class CalendarActivity : AppCompatActivity() {
         for (p in patterns) {
             try {
                 val sdf = SimpleDateFormat(p, Locale.US)
-                // 'Z' 패턴은 UTC로, 그 외 XXX는 offset 포함이니 그냥 parse해도 됨
                 sdf.timeZone = TimeZone.getTimeZone("UTC")
                 val t = sdf.parse(value)?.time
                 if (t != null) return t
@@ -180,8 +171,6 @@ class CalendarActivity : AppCompatActivity() {
         }
         return null
     }
-
-    // ----------------- 너 기존 Firestore 배너 로직 (그대로) -----------------
 
     private fun loadTodayFirestoreEvents() {
         val db = FirebaseFirestore.getInstance()
