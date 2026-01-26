@@ -48,7 +48,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginEnd="10dp"
-            android:src="@drawable/outline_data_alert_24"
+            android:src="@drawable/baseline_notifications_24"
             app:layout_constraintEnd_toStartOf="@+id/iv_toolbar_mypage"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"

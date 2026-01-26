@@ -197,9 +197,6 @@ class MainActivity : BaseActivity() {
             ExistingPeriodicWorkPolicy.UPDATE,    // 이미 예약되어 있다면 유지 (중복 실행 방지)
             workRequest
         )
-
-        // 안내용 토스트 (선택 사항)
-        Toast.makeText(this, "매일 $NOTI_HOUR:$NOTI_MINUTE 에 알림을 확인합니다.", Toast.LENGTH_SHORT).show()
     }
 
     private fun calculateInitialDelay(targetHour: Int, targetMinute: Int): Long {

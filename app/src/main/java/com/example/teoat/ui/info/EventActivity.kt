@@ -49,7 +49,6 @@ class EventActivity : BaseActivity() {
     private lateinit var tvNoResult: TextView
 
     private var isFilterScrapOn = false     // 스크랩 모아보기 필터 상태
-    private var isFilterToggleOn = false // 상세 검색창 열린 상태
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

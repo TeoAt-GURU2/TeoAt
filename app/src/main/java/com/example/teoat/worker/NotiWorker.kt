@@ -33,7 +33,6 @@ class NotiWorker(
     private val CHANNEL_ID = "teoat_channel_v4_urgent"
 
     override suspend fun doWork(): Result {
-        Log.d("NotiWorker", "워커 실행됨!")
 
         val uid = session.getUserId()
         if (uid.isNullOrEmpty()) return Result.success()

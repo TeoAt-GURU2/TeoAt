@@ -4,8 +4,7 @@
     android:layout_height="180dp"
     android:gravity="bottom"
     android:orientation="vertical"
-    android:padding="16dp"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark">
+    android:padding="16dp">
 
     <ImageView
         android:id="@+id/iv_header_icon"
