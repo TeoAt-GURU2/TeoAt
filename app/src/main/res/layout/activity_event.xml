@@ -51,6 +51,95 @@
             android:padding="8dp"
             android:layout_marginStart="8dp"
             android:contentDescription="스크랩한 행사 보기" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center_vertical">
+
+        <ImageView
+            android:id="@+id/iv_filter_toggle"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@android:drawable/arrow_down_float"
+            android:padding="5dp"
+            android:layout_marginStart="10dp"
+            android:contentDescription="상세 검색 필터 열기"
+            app:tint="#000000"  />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="상세 검색 조건 설정"
+            android:textStyle="bold"
+            android:textSize="12sp"
+            android:layout_marginStart="5dp"/>
+
+        <ImageView
+            android:id="@+id/iv_filter_reset"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@android:drawable/ic_menu_revert"
+            android:padding="5dp"
+            android:layout_marginEnd="10dp"
+            android:contentDescription="검색 조건 초기화"
+            app:tint="#000000" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_filter_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+            
+            <TextView
+                android:text="나이"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp" />
+            
+            <EditText
+                android:id="@+id/et_age"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:textSize="12sp"
+                android:layout_marginStart="5dp"  />
+
+            <TextView
+                android:text="지역"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"/>
+
+            <EditText
+                android:id="@+id/et_city"
+                android:layout_width="120dp"
+                android:layout_height="match_parent"
+                android:hint="수원시 또는 수원"
+                android:layout_marginStart="5dp"
+                android:textSize="12sp" />
+            
+            <Button
+                android:id="@+id/btn_filter_search"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="조회"
+                android:layout_marginStart="10dp"
+                android:textSize="12sp" />
+        </LinearLayout>
 
     </LinearLayout>
 
@@ -95,7 +184,7 @@
 
         <View android:layout_width="1dp" android:layout_height="match_parent" android:background="@color/table_line" />
         <TextView
-            android:text="헹사일"
+            android:text="마감일"
             android:layout_width="50dp"
             android:layout_height="match_parent"
             android:gravity="center"
@@ -108,6 +197,16 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/table_line"    />
+
+    <TextView
+        android:id="@+id/tv_no_result"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="조건에 맞는 결과가 없습니다."
+        android:visibility="gone"
+        android:gravity="center|center_vertical"
+        android:textSize="14sp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_event_list"

@@ -34,9 +34,9 @@ class EventAdapter(
         holder.title.text = event.title
         holder.host.text = event.host
 
-        if (event.startDate != null) {
+        if (event.endDate != null) {
             val sdf = SimpleDateFormat("MM.dd", Locale.KOREA)
-            holder.date.text = sdf.format(event.startDate.toDate())
+            holder.date.text = sdf.format(event.endDate.toDate())
         } else {
             holder.date.text = "-"
         }

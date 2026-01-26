@@ -17,6 +17,7 @@ import com.example.teoat.data.model.NotificationModel
 import com.example.teoat.databinding.ActivityBaseBinding
 import com.example.teoat.ui.chatbot.ChatbotActivity
 import com.example.teoat.ui.info.EventActivity
+import com.example.teoat.ui.info.PolicyActivity
 import com.example.teoat.ui.main.MainActivity
 import com.example.teoat.ui.map.FacilityActivity
 import com.example.teoat.ui.map.StoreActivity
@@ -133,7 +134,7 @@ open class BaseActivity : AppCompatActivity() {
                 }
                 R.id.nav_store -> { startActivity(Intent(this, StoreActivity::class.java)) }
                 R.id.nav_facility -> { startActivity(Intent(this, FacilityActivity::class.java)) }
-                R.id.nav_policy -> { startActivity(Intent(this, MainActivity::class.java)) }
+                R.id.nav_policy -> { startActivity(Intent(this, PolicyActivity::class.java)) }
                 R.id.nav_event -> { startActivity(Intent(this, EventActivity::class.java)) }
                 R.id.nav_chatbot -> { startActivity(Intent(this, ChatbotActivity::class.java)) }
             }
