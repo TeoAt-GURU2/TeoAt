@@ -13,7 +13,6 @@ class CalendarRepository(
     private val zone = ZoneId.of("Asia/Seoul")
 
     suspend fun fetchMonth(year: Int, month0Based: Int): List<CalendarEventItem> {
-        // month0Based: 0=Jan ... 11=Dec
         val start = ZonedDateTime.of(year, month0Based + 1, 1, 0, 0, 0, 0, zone)
         val end = start.plusMonths(1)
 
