@@ -84,18 +84,7 @@ dependencies {
     // 가맹점, 복지시설 조회 API 불러올 때
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-<<<<<<< HEAD
 
     // 알림 전송 관련 WorkManager <- 백그라운드 작업
     implementation("androidx.work:work-runtime-ktx:2.11.0")
-=======
-}
-
-secrets {
-    // 기본값인 local.properties 대신 secrets.properties를 읽게 설정
-    propertiesFileName = "secrets.properties"
-
-    // 혹시라도 대문자 변환 문제가 생기지 않도록 설정 (선택사항)
-    defaultPropertiesFileName = "local.properties"
->>>>>>> 18e4a3eaf941ba6fb3019ca09d6546b9410ab3e6
 }

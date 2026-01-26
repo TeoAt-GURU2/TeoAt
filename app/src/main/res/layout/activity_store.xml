@@ -88,15 +88,7 @@
             android:text="★"
             android:textColor="#000000" />
 
-<<<<<<< HEAD
         <View android:layout_width="1dp" android:layout_height="match_parent" android:background="@color/table_line" />
-=======
-        <TextView
-            android:layout_width="50dp"
-            android:layout_height="match_parent"
-            android:gravity="center" android:text="★"
-            android:textColor="#000000" />
->>>>>>> 18e4a3eaf941ba6fb3019ca09d6546b9410ab3e6
 
         <TextView
             android:layout_width="0dp"
@@ -107,20 +99,8 @@
             android:textStyle="bold"
             android:textColor="#000000" />
 
-<<<<<<< HEAD
         <View android:layout_width="1dp" android:layout_height="match_parent" android:background="@color/table_line" />
 
-=======
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1" android:gravity="center"
-            android:text="가맹점" android:textStyle="bold"
-            android:textColor="#000000" />
-
-        <View android:layout_width="1dp" android:layout_height="match_parent" android:background="#000000" />
-
->>>>>>> 18e4a3eaf941ba6fb3019ca09d6546b9410ab3e6
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -129,11 +109,6 @@
             android:text="주소"
             android:textStyle="bold"
             android:textColor="#000000" />
-<<<<<<< HEAD
-=======
-
-        <View android:layout_width="1dp" android:layout_height="match_parent" android:background="#000000" />
->>>>>>> 18e4a3eaf941ba6fb3019ca09d6546b9410ab3e6
     </LinearLayout>
 
     <View

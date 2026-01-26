@@ -31,8 +31,6 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 
 class FacilityActivity : BaseActivity(), OnMapReadyCallback {
 
@@ -43,11 +41,7 @@ class FacilityActivity : BaseActivity(), OnMapReadyCallback {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val markerMap = HashMap<String, Marker>()
 
-<<<<<<< HEAD
     // Firestore 변수 선언: 로그인 확인 여부, 즐겨찾기 연동을 위함
-=======
-    // Firebase 변수
->>>>>>> 18e4a3eaf941ba6fb3019ca09d6546b9410ab3e6
     private val auth = FirebaseAuth.getInstance()
     private val db = FirebaseFirestore.getInstance()
 
@@ -71,7 +65,6 @@ class FacilityActivity : BaseActivity(), OnMapReadyCallback {
         // 3. 어댑터 설정
         adapter = FacilityAdapter(allFacilities,
             onFavoriteClick = { facility ->
-<<<<<<< HEAD
                 // 로그인 여부 확인
                 val currentUser = auth.currentUser
                 if (currentUser == null) {
@@ -84,19 +77,6 @@ class FacilityActivity : BaseActivity(), OnMapReadyCallback {
 
                     applyFilters(binding.etSearch.text.toString())
                 }
-=======
-                val user = auth.currentUser
-                if (user == null) {
-                    Toast.makeText(this, "로그인이 필요한 기능입니다.", Toast.LENGTH_SHORT).show()
-                    return@FacilityAdapter
-                }
-
-                // 상태 반전 및 Firestore 업데이트
-                facility.isFavorite = !facility.isFavorite
-                toggleFavoriteInFirestore(user.uid, facility)
-
-                applyFilters(binding.etSearch.text.toString())
->>>>>>> 18e4a3eaf941ba6fb3019ca09d6546b9410ab3e6
             },
             onItemClick = { facility ->
                 val location = LatLng(facility.latitude, facility.longitude)
@@ -202,38 +182,27 @@ class FacilityActivity : BaseActivity(), OnMapReadyCallback {
             .build()
 
         val apiService = retrofit.create(ApiService::class.java)
-        val myApiKey = BuildConfig.MCS_API_KEY
+        val myApiKey = BuildConfig.MCS_API_KEY // BuildConfig에 키가 설정되어 있어야 합니다.
 
+        // 청소년시설 현황 API 호출 (Youngbgfacltinst)
         apiService.getFacilities(key = myApiKey).enqueue(object : Callback<FacilityResponse> {
             override fun onResponse(call: Call<FacilityResponse>, response: Response<FacilityResponse>) {
                 if (response.isSuccessful) {
-                    // 1. 기존 리스트 초기화 (중복 방지)
-                    allFacilities.clear()
-
-                    // 2. API로부터 받은 데이터를 Facility 객체로 변환하여 리스트에 담기
+                    // API 문서 구조에 맞게 수정 (Youngbgfacltinst 경로 확인 필요)
                     val items = response.body()?.Youngbgfacltinst?.get(1)?.row
                     items?.forEach { item ->
                         allFacilities.add(Facility(
-                            id = item.INST_NM ?: "", // 기관명을 고유 ID로 사용
+                            id = item.INST_NM ?: "", // 기관명
                             name = item.INST_NM ?: "이름 없음",
                             address = item.REFINE_ROADNM_ADDR ?: "주소 없음",
-                            phone = item.TELNO ?: "번호 없음",
+                            phone = item.TELNO ?: "번호 없음", // 전화번호 추가
                             latitude = item.REFINE_WGS84_LAT?.toDoubleOrNull() ?: 37.0,
                             longitude = item.REFINE_WGS84_LOGT?.toDoubleOrNull() ?: 127.0
                         ))
                     }
-<<<<<<< HEAD
                     if (auth.currentUser != null) {
                         syncFavorites()
                     } else {
-=======
-
-                    // 3. [중요] 데이터를 다 불러온 후, 로그인 상태라면 즐겨찾기 동기화 시작
-                    if (auth.currentUser != null) {
-                        syncFavorites()
-                    } else {
-                        // 로그인 안 된 상태라면 바로 화면 갱신
->>>>>>> 18e4a3eaf941ba6fb3019ca09d6546b9410ab3e6
                         refreshUI()
                     }
                 }
@@ -270,18 +239,11 @@ class FacilityActivity : BaseActivity(), OnMapReadyCallback {
         }
     }
 
-<<<<<<< HEAD
     // 즐겨찾기 설정 : Firestore에서 저장, 삭제하기 위한 함수
     private fun toggleFavoriteInFirestore(userId : String, facility: Facility) {
         // 가맹점(stores) 컬렉션에 저장
         val favRef = db.collection("users").document(userId)
             .collection("favorite_facilities").document(facility.id)
-=======
-    //Firestore에 즐겨찾기 저장/삭제
-    private fun toggleFavoriteInFirestore(userId: String, facility: Facility) {
-        val favRef = db.collection("users").document(userId)
-            .collection("favorites").document(facility.id)
->>>>>>> 18e4a3eaf941ba6fb3019ca09d6546b9410ab3e6
 
         if (facility.isFavorite) {
             val data = hashMapOf(
@@ -295,7 +257,6 @@ class FacilityActivity : BaseActivity(), OnMapReadyCallback {
         }
     }
 
-<<<<<<< HEAD
     // 내 즐겨찾기 동기화 함수 추가
     private fun syncFavorites() {
         val user = auth.currentUser ?: return
@@ -304,36 +265,14 @@ class FacilityActivity : BaseActivity(), OnMapReadyCallback {
             .get()
             .addOnSuccessListener { documents ->
                 val favoriteIds = documents.map { it.id }
-=======
-    //내 즐겨찾기 목록을 가져와서 API 데이터와 동기화
-    private fun syncFavorites() {
-        val user = auth.currentUser ?: return
-
-        // Firestore에서 해당 사용자의 즐겨찾기 컬렉션 전체 가져오기
-        db.collection("users").document(user.uid).collection("favorites")
-            .get()
-            .addOnSuccessListener { documents ->
-                // 저장된 즐겨찾기 문서들의 ID(시설명) 리스트 추출
-                val favoriteIds = documents.map { it.id }
-
-                // API로 불러온 전체 리스트를 돌면서, 내 즐겨찾기에 포함된 시설은 isFavorite를 true로 변경
->>>>>>> 18e4a3eaf941ba6fb3019ca09d6546b9410ab3e6
                 allFacilities.forEach { facility ->
                     if (favoriteIds.contains(facility.id)) {
                         facility.isFavorite = true
                     }
                 }
-<<<<<<< HEAD
                 refreshUI()
             }
             .addOnFailureListener {
-=======
-                // 동기화 완료 후 화면 갱신
-                refreshUI()
-            }
-            .addOnFailureListener {
-                // 실패 시에도 일단 화면은 보여줌
->>>>>>> 18e4a3eaf941ba6fb3019ca09d6546b9410ab3e6
                 refreshUI()
             }
     }

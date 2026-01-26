@@ -1,8 +1,12 @@
 package com.example.teoat.ui.map
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.teoat.R
 import com.example.teoat.databinding.ItemFacilityRowBinding
 
 class FacilityAdapter(
@@ -31,6 +35,7 @@ class FacilityAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        // LayoutInflater로 바인딩 inflate
         val binding = ItemFacilityRowBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
@@ -40,8 +45,6 @@ class FacilityAdapter(
         holder.binding.tvFacilityName.text = facility.name
         holder.binding.tvFacilityAddress.text = facility.address
         holder.binding.tvFacilityPhone.text = facility.phone
-
-        // 즐겨찾기 상태에 따른 별 이미지 설정
         holder.binding.ivFacilityStar.setImageResource(
             if (facility.isFavorite) android.R.drawable.btn_star_big_on
             else android.R.drawable.btn_star_big_off
