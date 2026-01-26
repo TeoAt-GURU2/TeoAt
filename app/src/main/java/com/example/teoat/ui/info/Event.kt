@@ -9,10 +9,10 @@ data class Event(
     var id: String = "",
     val title: String = "",
     val description: String = "",
-    val host: String = "",         // 'agency' 대신 'host' 사용
+    val host: String = "",          
     val location: String = "",
     val region: Long = 0L,          // 지역 코드 (숫자)
-    val target: String = "",       // 대상 (예: "초등 1, 2학년")
+    val target: String = "",       // 행사 대상(연령) 
     val startDate: Timestamp? = null, // 등록 시작일 (타임스탬프)
     val endDate: Timestamp? = null,
 
