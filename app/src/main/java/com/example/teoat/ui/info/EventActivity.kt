@@ -104,7 +104,11 @@ class EventActivity : BaseActivity() {
                 }
             }
 
-            fetchEvents(age, regionCode)
+            if (age.isNotEmpty()) {
+                applyFilters()
+            }
+
+            fetchEvents(regionCode)
         }
 
         // 검색 결과 초기화 버튼 클릭 리스너
@@ -112,13 +116,13 @@ class EventActivity : BaseActivity() {
             etAge.text.clear()
             etCity.text.clear()
 
-            fetchEvents()
+            fetchEvents(null)
         }
 
         // 검색어 입력 리스너 (실시간 필터링)
         editSearch.addTextChangedListener(object: TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                filterList(s.toString())
+                applyFilters()
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -135,7 +139,7 @@ class EventActivity : BaseActivity() {
                 return@setOnClickListener
             }
             updatedFilterIcon()
-            filterList(editSearch.text.toString())
+            applyFilters()
         }
     }
 
@@ -175,16 +179,12 @@ class EventActivity : BaseActivity() {
 
     }
 
-    private fun fetchEvents(age: String="", region: Long? = null) {
+    private fun fetchEvents(region: Long? = null) {
         var query: Query = db.collection("events")
 
         // 지역 입력값이 있는 경우
         if (region != null) {
             query = query.whereEqualTo("region", region)
-        }
-
-        if (age.isNotEmpty()) {
-            query = query.whereEqualTo("target", age)
         }
 
         query.get()
@@ -209,13 +209,39 @@ class EventActivity : BaseActivity() {
                     tvNoResult.visibility = View.GONE
                 }
 
-                // 초기화면 갱신
-                val currentSearchKeyword = findViewById<EditText>(R.id.et_search).text.toString()
-                filterList(currentSearchKeyword)
+                applyFilters()
             }
             .addOnFailureListener { exception ->
                 Log.e("EventActivity", "행사 목록 로드 실패", exception)
             }
+    }
+
+    private fun applyFilters() {
+        val keyword = findViewById<EditText>(R.id.et_search).text.toString()
+        val ageInput = findViewById<EditText>(R.id.et_age).text.toString().trim() // 나이 입력값
+
+        val filtered = allEventList.filter { event ->
+            // 1. 검색어 필터
+            val matchesKeyword = keyword.isEmpty() || event.title.contains(keyword, ignoreCase = true)
+
+            // 2. 스크랩 모아보기 필터
+            val matchesScrap = if (isFilterScrapOn) event.isScrapped else true
+
+            // 3. 나이(Target) 필터
+            val matchesAge = if (ageInput.isEmpty()) {
+                true
+            } else {
+                // event.target이 null일 수 있으므로 처리 필요, DB에 "20"이 포함된 문자열이면 통과
+                event.target?.contains(ageInput, ignoreCase = true) == true
+            }
+
+            matchesKeyword && matchesScrap && matchesAge
+        }
+
+        adapter.updateData(filtered)
+
+        // 결과 없음 뷰 처리
+        tvNoResult.visibility = if (filtered.isEmpty()) View.VISIBLE else View.GONE
     }
 
     // 필터링 로직
