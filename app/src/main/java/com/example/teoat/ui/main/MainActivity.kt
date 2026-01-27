@@ -18,6 +18,7 @@ import androidx.work.WorkManager
 import com.example.teoat.R
 import com.example.teoat.base.BaseActivity
 import com.example.teoat.databinding.ActivityMainBinding
+import com.example.teoat.ui.calendar.CalendarActivity
 import com.example.teoat.ui.chatbot.ChatbotActivity
 import com.example.teoat.ui.info.EventActivity
 import com.example.teoat.ui.main.adapter.BannerAdapter
@@ -121,7 +122,7 @@ class MainActivity : BaseActivity() {
 
         // "캘린더 보기" 버튼 클릭 리스너
         binding.btnCalendar.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, CalendarActivity::class.java)
             startActivity(intent)
         }
 

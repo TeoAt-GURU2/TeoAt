@@ -151,7 +151,7 @@ class EventActivity : BaseActivity() {
     private fun loadUserDataAndEvents() {
         val user = auth.currentUser
         if (user != null) {
-            // 내 스크롭 목록 먼저 가져오기
+            // 내 스크랩 목록 먼저 가져오기
             db.collection("users").document(user.uid).collection("scrap_events")
                 .get()
                 .addOnSuccessListener { documents ->
