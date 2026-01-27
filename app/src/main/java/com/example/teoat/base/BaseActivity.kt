@@ -15,6 +15,7 @@ import com.example.teoat.R
 import com.example.teoat.common.SessionManager
 import com.example.teoat.data.model.NotificationModel
 import com.example.teoat.databinding.ActivityBaseBinding
+import com.example.teoat.ui.calendar.CalendarActivity
 import com.example.teoat.ui.chatbot.ChatbotActivity
 import com.example.teoat.ui.info.EventActivity
 import com.example.teoat.ui.info.PolicyActivity
@@ -126,7 +127,7 @@ open class BaseActivity : AppCompatActivity() {
                     startActivity(intent)
                 }
                 R.id.nav_mypage -> { startActivity(Intent(this, MyPageActivity::class.java)) }
-                R.id.nav_calendar -> { startActivity(Intent(this, MainActivity::class.java)) }
+                R.id.nav_calendar -> { startActivity(Intent(this, CalendarActivity::class.java)) }
                 R.id.nav_card_manage -> {
                     val url = "https://www.gg.go.kr/gdream/view/fma/ordmain/main"
                     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
