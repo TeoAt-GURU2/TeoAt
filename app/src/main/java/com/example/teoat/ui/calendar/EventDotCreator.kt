@@ -13,7 +13,6 @@ class EventDotDecorator(private val dates: Collection<CalendarDay>) : DayViewDec
     }
 
     override fun decorate(view: DayViewFacade) {
-        // 👇 여기에 Color.RED(빨강)나 Color.BLUE(파랑)가 꼭 있어야 보입니다!
         view.addSpan(DotSpan(5f, Color.RED))
     }
 }

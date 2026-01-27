@@ -60,7 +60,7 @@ class PolicyActivity : BaseActivity() {
             }
         }
 
-        // [추가] 검색창(etSearch) 텍스트 변경 감지 리스너
+        // 검색창(etSearch) 텍스트 변경 감지 리스너
         binding.etSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
@@ -80,17 +80,17 @@ class PolicyActivity : BaseActivity() {
 
     // 검색어 필터링 함수
     private fun filterList(query: String) {
-        // 1. 원본 데이터(allPolicyList)에서 검색어가 포함된 항목만 추출
+        // 원본 데이터(allPolicyList)에서 검색어가 포함된 항목만 추출
         val filtered = allPolicyList.filter { policy ->
             // 제목(TITLE)에 검색어가 포함되어 있는지 확인 (대소문자 무시)
             policy.TITLE?.contains(query, ignoreCase = true) == true
         }
 
-        // 2. 화면 표시용 리스트(policyList) 갱신
+        // 화면 표시용 리스트(policyList) 갱신
         policyList.clear()
         policyList.addAll(filtered)
 
-        // 3. 어댑터에 변경 알림
+        // 어댑터에 변경 알림
         adapter.notifyDataSetChanged()
     }
 
@@ -106,14 +106,14 @@ class PolicyActivity : BaseActivity() {
         apiService.getPolicies(key = myApiKey).enqueue(object : Callback<PolicyResponse> {
             override fun onResponse(call: Call<PolicyResponse>, response: Response<PolicyResponse>) {
                 if (response.isSuccessful) {
-                    // 응답 구조: JnfrMiryfcSsrsM -> [Head, Row]
+
                     val wrapperList = response.body()?.JnfrMiryfcSsrsM
 
                     // 일반적으로 API 응답 리스트의 두 번째 요소(index 1)에 실제 데이터 row가 존재
                     val items = wrapperList?.getOrNull(1)?.row
 
                     if (items != null) {
-                        // [수정] 원본 리스트와 표시용 리스트 모두에 데이터 저장
+                        // 원본 리스트와 표시용 리스트 모두에 데이터 저장
                         allPolicyList.clear()
                         allPolicyList.addAll(items) // 원본 보존
 

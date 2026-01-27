@@ -48,7 +48,8 @@ class ChatViewModel : ViewModel() {
         }
     )
 
-    // 대화 세션 시작 (ViewModel이 생성될 때마다 새로 시작 == 화면 나갔다가 들어오면 새 Chat이 시작됨)
+    // 대화 세션 시작
+    // ViewModel이 생성될 때마다 새로 시작 == 화면 나갔다가 들어오면 새 Chat이 시작됨
     private val chat = generativeModel.startChat()
 
     // 메세지 전송 로직

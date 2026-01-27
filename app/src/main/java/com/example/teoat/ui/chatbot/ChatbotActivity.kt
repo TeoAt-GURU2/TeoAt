@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.teoat.R
 import com.example.teoat.base.BaseActivity
 import com.example.teoat.databinding.ActivityChatbotBinding
+import com.example.teoat.ui.info.EventActivity
+import com.example.teoat.ui.info.PolicyActivity
 import com.example.teoat.ui.main.MainActivity
 import com.example.teoat.ui.map.FacilityActivity
 import com.example.teoat.ui.map.StoreActivity
@@ -96,8 +98,8 @@ class ChatbotActivity : BaseActivity() {
         val intent = when (command) {
             "CMD_STORE" -> Intent(this, StoreActivity::class.java)
             "CMD_FACILITY" -> Intent(this, FacilityActivity::class.java)
-            "CMD_POLICY" -> Intent(this, MainActivity::class.java)
-            "CMD_EVENT" -> Intent(this, MainActivity::class.java)
+            "CMD_POLICY" -> Intent(this, PolicyActivity::class.java)
+            "CMD_EVENT" -> Intent(this, EventActivity::class.java)
             "CMD_MYPAGE" -> Intent(this, MyPageActivity::class.java)
             else -> null
         }

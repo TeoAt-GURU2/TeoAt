@@ -23,7 +23,6 @@ class PolicyAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        // ItemPolicyRowBinding은 item_policy_row.xml 파일명에 따라 자동 생성됩니다.
         val binding = ItemPolicyRowBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
@@ -32,13 +31,13 @@ class PolicyAdapter(
         val item = policies[position]
 
         with(holder.binding) {
-            // 1. 사업명 (TITLE)
+            // 사업명 (TITLE)
             tvPolTitle.text = item.TITLE ?: "제목 없음"
 
-            // 2. 주요 목적 및 내용 (MAIN_PURPS)
+            // 주요 목적 및 내용 (MAIN_PURPS)
             tvPolDescrpt.text = item.MAIN_PURPS ?: "내용 정보가 없습니다."
 
-            // 3. 운영주체 및 조직 (OPERT_MAINBD_NM + OPERT_ORGNZT_NM)
+            // 운영주체 및 조직 (OPERT_MAINBD_NM + OPERT_ORGNZT_NM)
             // 예: "운영주체: 경기도 청소년과"
             val mainBody = item.OPERT_MAINBD_NM ?: ""
             val orgName = item.OPERT_ORGNZT_NM ?: ""
@@ -46,16 +45,11 @@ class PolicyAdapter(
             val operationInfo = if (mainBody.isBlank() && orgName.isBlank()) "-" else "$mainBody $orgName".trim()
             tvPolOprt.text = "운영주체: $operationInfo"
 
-            // 4. 문의처 (GUID)
+            // 문의처 (GUID)
             tvPolContact.text = "문의처: ${item.GUID ?: "-"}"
         }
     }
 
     override fun getItemCount() = policies.size
-
-    fun updateData(newPolicies: List<PolicyItem>) {
-        policies = newPolicies
-        notifyDataSetChanged()
-    }
 
 }

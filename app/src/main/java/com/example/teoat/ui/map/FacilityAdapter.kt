@@ -35,7 +35,7 @@ class FacilityAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        // LayoutInflater로 바인딩 inflate
+
         val binding = ItemFacilityRowBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }

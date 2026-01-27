@@ -48,7 +48,7 @@ class NotiWorker(
     }
 
     private suspend fun checkDbAndSendPush(uid: String) {
-        // users -> notifications 컬렉션 조회
+        // users/{uid}/notifications 컬렉션 조회
         val snapshot = db.collection("users").document(uid)
             .collection("notifications")
             .whereEqualTo("isRead", false)
@@ -64,7 +64,6 @@ class NotiWorker(
             val eventDate = Calendar.getInstance().apply { time = timestamp.toDate() }
             val title = doc.getString("title") ?: "알림"
 
-            // [날짜 비교 로직]
             // 이벤트 마감일(timestamp)과 내일 날짜가 같은 연/월/일인지 확인 (하루 전 알림)
             if (isSameDay(eventDate, today)) {
                 Log.d("NotiWorker", "알림 발송 조건 충족: $title")

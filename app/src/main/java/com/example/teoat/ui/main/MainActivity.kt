@@ -141,25 +141,24 @@ class MainActivity : BaseActivity() {
     }
 
     private fun setupBanner() {
-        // 1. 배너 데이터 준비
+        // 배너 데이터 준비
         val bannerList = listOf(
             BannerItem(R.drawable.banner1),
             BannerItem(R.drawable.banner2)
         )
 
-        // 2. 어댑터 연결
+        // 어댑터 연결
         val bannerAdapter = BannerAdapter(bannerList)
         binding.viewPagerBanner.adapter = bannerAdapter
 
-        // 3. 인디케이터 연결
+        // 인디케이터 연결
         TabLayoutMediator(binding.tabLayoutIndicator, binding.viewPagerBanner) { _, _ ->
-            // 텍스트 없이 selector만 적용
         }.attach()
 
-        // 4. 자동 슬라이드 기능 시작
+        // 자동 슬라이드 기능 시작
         autoSlideBanner()
 
-        // 5. 사용자가 터치했을 때 슬라이드 멈춤, 재개 처리
+        // 사용자가 터치했을 때 슬라이드 멈춤, 재개
         binding.viewPagerBanner.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
@@ -186,7 +185,6 @@ class MainActivity : BaseActivity() {
         // 현재 시각과 목표 시각의 차이(delay) 계산
         val delay = calculateInitialDelay(NOTI_HOUR, NOTI_MINUTE)
 
-        // WorkManager요청 생성
         val workRequest = PeriodicWorkRequestBuilder<NotiWorker>(24, TimeUnit.HOURS)
             .setInitialDelay(delay, TimeUnit.MILLISECONDS)
             .addTag("daily_noti")
@@ -195,7 +193,7 @@ class MainActivity : BaseActivity() {
         // 작업 예약
         WorkManager.getInstance(this).enqueueUniquePeriodicWork(
             "DailyEventCheck",
-            ExistingPeriodicWorkPolicy.UPDATE,    // 이미 예약되어 있다면 유지 (중복 실행 방지)
+            ExistingPeriodicWorkPolicy.UPDATE,    // 이미 예약되어 있다면 유지
             workRequest
         )
     }

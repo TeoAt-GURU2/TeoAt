@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
 
-// 1. Google Event Adapter
+// Google Event Adapter
 class GoogleEventAdapter(
     private val items: List<CalendarEventItem>
 ) : RecyclerView.Adapter<GoogleEventAdapter.VH>() {
@@ -48,13 +48,12 @@ class GoogleEventAdapter(
     }
 }
 
-// 2. Today Event Adapter (Firestore용)
+// Today Event Adapter
 class TodayEventAdapter(
     private val items: List<TodayEvent>
 ) : RecyclerView.Adapter<TodayEventAdapter.VH>() {
 
     class VH(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        // simple_list_item_2는 text1, text2 ID를 가짐
         private val t1: TextView = itemView.findViewById(android.R.id.text1)
         private val t2: TextView = itemView.findViewById(android.R.id.text2)
 

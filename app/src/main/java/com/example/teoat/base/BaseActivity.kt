@@ -162,7 +162,6 @@ open class BaseActivity : AppCompatActivity() {
     private fun deleteNotification(notification: NotificationModel) {
         val uid = session.getUserId() ?: return
 
-        // notification.id가 문서 ID라고 가정 (NotificationModel에 id 필드 확인 필요)
         // 만약 id가 비어있다면 문서 로드 시 id를 넣어주는 로직이 필요함
         if (notification.id.isEmpty()) return
 

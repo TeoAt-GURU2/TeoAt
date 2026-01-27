@@ -38,7 +38,6 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         // 캘린더 API 키 변수 생성
-        // 캘린더 API 키 변수 생성 (유지)
         buildConfigField("String", "GCAL_API_KEY", "\"${localProperties["GCAL_API_KEY"] ?: ""}\"")
         buildConfigField("String", "GCAL_CALENDAR_ID", "\"${localProperties["GCAL_CALENDAR_ID"] ?: ""}\"")
     }

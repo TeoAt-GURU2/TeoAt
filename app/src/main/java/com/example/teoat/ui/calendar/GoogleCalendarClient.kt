@@ -15,7 +15,7 @@ import java.util.Calendar
 import java.util.Locale
 import java.util.TimeZone
 
-// Models
+// Data Models
 data class CalendarEventsResponse(
     @SerializedName("items") val items: List<CalendarEventItem>?
 )

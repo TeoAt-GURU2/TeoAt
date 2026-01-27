@@ -51,7 +51,7 @@ class CalendarActivity : AppCompatActivity() {
         initViews()
         initRepository()
 
-        // 1. 데이터 로드 시작
+        // 데이터 로드 시작
         refreshAllData()
     }
 
@@ -85,20 +85,18 @@ class CalendarActivity : AppCompatActivity() {
     }
 
     private fun refreshAllData() {
-        // 1. Firestore 스크랩 데이터 가져오기 (비동기)
+        // Firestore 스크랩 데이터 가져오기
         fetchScrapEvents()
 
-        // 2. 구글 캘린더 데이터 가져오기 (현재 월 기준)
+        // 구글 캘린더 데이터 가져오기 (현재 월 기준)
         val cur = calendarView.currentDate ?: CalendarDay.today()
         loadGoogleEventsForMonth(cur.year, cur.month)
     }
 
-    // =========================================================
-    // 1. Google Calendar 로드 로직
-    // =========================================================
+    // Google Calendar 로드
     private fun loadGoogleEventsForMonth(year: Int, month1Based: Int) {
         val key = "%04d-%02d".format(year, month1Based)
-        // 같은 달을 중복 로드하지 않도록 방지 (필요 시 주석 처리)
+        // 같은 달을 중복 로드하지 않도록 방지
         if (lastLoadedMonthKey == key) {
             updateUI() // 데이터는 그대로 두고 UI만 갱신
             return
@@ -109,14 +107,12 @@ class CalendarActivity : AppCompatActivity() {
             val events = repo.fetchMonth(year, month1Based - 1)
             withContext(Dispatchers.Main) {
                 googleEvents = events
-                updateUI() // 합쳐서 UI 갱신
+                updateUI()
             }
         }
     }
 
-    // =========================================================
-    // 2. Firestore 스크랩 로드 로직 (핵심 수정 부분)
-    // =========================================================
+    // Firestore에서 스크랩한 목록 불러오기 users/{uid}/scrap_events
     private fun fetchScrapEvents() {
         val user = auth.currentUser
         if (user == null) {
@@ -126,7 +122,6 @@ class CalendarActivity : AppCompatActivity() {
             return
         }
 
-        // 경로 수정: events -> users/{uid}/scrap_events
         db.collection("users").document(user.uid).collection("scrap_events")
             .get()
             .addOnSuccessListener { documents ->
@@ -138,7 +133,6 @@ class CalendarActivity : AppCompatActivity() {
                         // Event 객체로 변환
                         val event = doc.toObject(Event::class.java)
 
-                        // [중요] Event -> CalendarEventItem 변환
                         // endDate를 캘린더의 '날짜'로 사용
                         val dateStr = event.endDate?.toDate()?.let { sdf.format(it) }
 
@@ -148,7 +142,7 @@ class CalendarActivity : AppCompatActivity() {
                                 summary = event.title,   // 제목
                                 description = event.description,
                                 location = event.host,   // 주최 기관을 장소(host) 칸에 표시
-                                start = CalendarEventTime(null, dateStr), // 날짜만 있는 종일 일정 취급
+                                start = CalendarEventTime(null, dateStr),
                                 end = null
                             )
                             list.add(item)
@@ -166,9 +160,7 @@ class CalendarActivity : AppCompatActivity() {
             }
     }
 
-    // =========================================================
-    // 3. UI 통합 갱신 (Dot 찍기 & 리스트 표시)
-    // =========================================================
+    // UI 갱신: 저장된 일정이 있는 날짜에 Dot 찍기
     private fun updateUI() {
         // 두 리스트 병합
         allEvents = googleEvents + scrapEvents

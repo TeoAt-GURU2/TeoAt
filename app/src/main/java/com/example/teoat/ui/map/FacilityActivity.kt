@@ -41,7 +41,8 @@ class FacilityActivity : BaseActivity(), OnMapReadyCallback {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val markerMap = HashMap<String, Marker>()
 
-    // Firestore 변수 선언: 로그인 확인 여부, 즐겨찾기 연동을 위함
+    // Firestore 변수 선언
+    // 로그인 확인 여부, 즐겨찾기 연동을 위함
     private val auth = FirebaseAuth.getInstance()
     private val db = FirebaseFirestore.getInstance()
 
@@ -52,17 +53,16 @@ class FacilityActivity : BaseActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-        // 1. 뷰 연결 삭제 -> binding 객체 사용으로 변경
         binding = ActivityFacilityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // 2. 지도 설정
+        // 지도 설정
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
         loadApiData()
 
-        // 3. 어댑터 설정
+        // 어댑터 설정
         adapter = FacilityAdapter(allFacilities,
             onFavoriteClick = { facility ->
                 // 로그인 여부 확인
@@ -89,7 +89,8 @@ class FacilityActivity : BaseActivity(), OnMapReadyCallback {
         binding.rvFacilityList.layoutManager = LinearLayoutManager(this)
         binding.rvFacilityList.adapter = adapter
 
-        // 4. 검색창 터치 리스너 (돋보기 아이콘 클릭 시 검색)
+        // 검색창 터치 리스너
+        // 돋보기 아이콘 클릭 시 검색
         binding.etSearch.setOnTouchListener { v, event ->
             if (event.action == android.view.MotionEvent.ACTION_UP) {
                 val drawableRight = binding.etSearch.compoundDrawables[2]
@@ -123,7 +124,7 @@ class FacilityActivity : BaseActivity(), OnMapReadyCallback {
             }
         })
 
-        // 5. 버튼 클릭 리스너
+        // 버튼 클릭 리스너
         // 즐겨찾기 버튼
         binding.ivTopFavorite.setOnClickListener {
             val currentUser = auth.currentUser
@@ -214,7 +215,6 @@ class FacilityActivity : BaseActivity(), OnMapReadyCallback {
         })
     }
 
-    // UI 갱신 로직을 별도 함수로 분리하여 재사용성 높임
     private fun refreshUI() {
         runOnUiThread {
             adapter.notifyDataSetChanged()
