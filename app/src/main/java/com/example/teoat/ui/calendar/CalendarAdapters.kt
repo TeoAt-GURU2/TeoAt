@@ -22,7 +22,7 @@ class GoogleEventAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
-        val v = LayoutInflater.from(parent.context).inflate(R.layout.item_event, parent, false)
+        val v = LayoutInflater.from(parent.context).inflate(R.layout.item_calendar_event, parent, false)
         return VH(v)
     }
 
