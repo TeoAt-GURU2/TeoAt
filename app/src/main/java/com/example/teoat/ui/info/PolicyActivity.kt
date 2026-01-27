@@ -4,6 +4,8 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.teoat.BuildConfig
 import com.example.teoat.R
@@ -21,6 +23,10 @@ class PolicyActivity : BaseActivity() {
     private lateinit var binding: ActivityPolicyBinding
 
     private lateinit var adapter: PolicyAdapter
+
+    // 전체 데이터를 보관할 원본 리스트
+    private var allPolicyList = mutableListOf<PolicyItem>()
+
     private var policyList = mutableListOf<PolicyItem>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,11 +60,38 @@ class PolicyActivity : BaseActivity() {
             }
         }
 
+        // [추가] 검색창(etSearch) 텍스트 변경 감지 리스너
+        binding.etSearch.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                // 텍스트가 변경될 때마다 필터링 함수 호출
+                filterList(s.toString())
+            }
+        })
+
         // RecyclerView 설정
         binding.rvPolicyList.layoutManager = LinearLayoutManager(this)
         binding.rvPolicyList.adapter = adapter
 
         loadPolicyData()
+    }
+
+    // 검색어 필터링 함수
+    private fun filterList(query: String) {
+        // 1. 원본 데이터(allPolicyList)에서 검색어가 포함된 항목만 추출
+        val filtered = allPolicyList.filter { policy ->
+            // 제목(TITLE)에 검색어가 포함되어 있는지 확인 (대소문자 무시)
+            policy.TITLE?.contains(query, ignoreCase = true) == true
+        }
+
+        // 2. 화면 표시용 리스트(policyList) 갱신
+        policyList.clear()
+        policyList.addAll(filtered)
+
+        // 3. 어댑터에 변경 알림
+        adapter.notifyDataSetChanged()
     }
 
     private fun loadPolicyData() {
@@ -80,8 +113,9 @@ class PolicyActivity : BaseActivity() {
                     val items = wrapperList?.getOrNull(1)?.row
 
                     if (items != null) {
-                        // 디버깅용
-                        items.forEach { android.util.Log.d("API TEST", "제목: ${it.TITLE}, URL값: ${it.RELATE_INFO}") }
+                        // [수정] 원본 리스트와 표시용 리스트 모두에 데이터 저장
+                        allPolicyList.clear()
+                        allPolicyList.addAll(items) // 원본 보존
 
                         policyList.clear()
                         policyList.addAll(items)
